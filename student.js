@@ -23,6 +23,7 @@
   const DEVICE_UID_KEY = "history-character-device-id";
   const labels = ["미션", "학생 정보", "사건 정리", "캐릭터", "초상화", "제출"];
   let introTab = "guide";
+  let exampleCase = "cromwell";
 
   let uid = "";
   let submissionId = "";
@@ -333,100 +334,71 @@
       </div>
       <div class="privacy-note"><b>과정 기록만으로 자동 감점하지 않습니다.</b> 기기 오류나 실수도 있을 수 있으므로 화면 이탈 기록은 필요한 경우 작성 과정을 확인하는 참고자료로만 사용합니다.</div>`;
 
-    const example = `<div class="example-showcase example-showcase-v3">
-      <div class="example-copy example-copy-wide">
-        <div class="quest-badge">TEACHER DEMO · SAMPLE BUILD</div>
-        <h2>역사적 사실을<br><span>게임 언어로 번역하는 법</span></h2>
-        <p>이 사례의 목적은 크롬웰을 그대로 따라 쓰는 것이 아닙니다. <b>먼저 역사적 사실을 충분히 설명하고</b>, 그 사실에서 드러나는 특징을 해석한 뒤, 그 특징을 <b>기술 또는 능력치의 효과</b>로 옮기는 과정을 보는 것입니다.</p>
-        <div class="demo-tip demo-tip-strong">
-          <b>BUILD FORMULA</b>
-          <span><strong>① 역사적 사실</strong> → <strong>② 그 사실의 의미</strong> → <strong>③ 게임 효과</strong> → <strong>④ 왜 이렇게 표현했는지 설명</strong></span>
-        </div>
-        <div class="demo-reading-guide">
-          <b>읽을 때 이것만 확인하세요.</b>
-          <span>‘게임 효과가 멋진가?’보다 <strong>‘역사적 사실과 효과 사이에 설명 가능한 연결이 있는가?’</strong>를 봅니다.</span>
-        </div>
-      </div>
-
-      <div class="case-game-card case-game-card-detailed" aria-label="올리버 크롬웰 교사 시범 게임 빌드">
-        <div class="case-card-glow"></div>
-        <div class="case-card-header">
-          <div class="case-rank"><small>DEMO</small><b>S</b></div>
-          <div class="case-title-block">
-            <span>HISTORICAL CHARACTER BUILD</span>
-            <h3>철의 신념가, 올리버 크롬웰</h3>
-            <p>청교도 혁명과 공화정의 역사적 사실을 게임 캐릭터의 기술로 재해석한 시범 빌드</p>
-          </div>
-          <div class="case-role"><span>ROLE</span><b>COMMANDER</b><small>군사 지도자 · 호국경</small></div>
-        </div>
-
-        <div class="case-event-band case-event-band-rich">
-          <div>
-            <span>MAIN EVENT</span>
-            <b>청교도 혁명과 공화정</b>
-            <p>크롬웰은 청교도 혁명 과정에서 의회군의 군사 지도자로 활약했고, 이후 공화정 아래에서 호국경으로 강한 정치적 권위를 행사했습니다. 아래의 기술들은 이 사건 속 군사 조직, 전투, 정치 권력, 지지 기반, 종교적 통치라는 서로 다른 역사적 사실을 각각 게임 효과로 표현한 것입니다.</p>
-          </div>
-          <div class="case-build-path"><span>HISTORY</span><i>→</i><span>MEANING</span><i>→</i><span>GAME</span></div>
-        </div>
-
-        <div class="case-skill-list">
-          <article class="case-skill-detail passive">
-            <div class="case-skill-top"><span>PASSIVE</span><b>신형군의 충성</b></div>
-            <div class="case-convert-grid">
-              <div class="case-history"><span>① 역사적 사실</span><p>올리버 크롬웰은 신형군(New Model Army)의 창설자가 아니지만, 그 운영에 큰 영향을 미쳤습니다. 그는 이러한 군사 조직을 통해 군사적 혁신을 추구했으며, 이는 지휘관과 병사 간의 강한 유대와 충성심을 바탕으로 했습니다. 그의 리더십은 병사들이 공포에 굴하지 않고 청교도 혁명의 전장에서 그를 따르게 하는 힘이었습니다.</p></div>
-              <div class="case-game-effect"><span>② 게임 기술</span><p><b>근처 아군 미니언과 챔피언의 방어력을 증가</b>시킵니다.</p></div>
-            </div>
-            <div class="case-link"><span>연결 논리</span><p>군사 조직의 결속과 병사들의 충성이라는 특징을, 크롬웰 주변의 아군이 더 단단해지는 <b>‘아군 강화’ 효과</b>로 표현했습니다.</p></div>
-          </article>
-
-          <article class="case-skill-detail attack">
-            <div class="case-skill-top"><span>Q · ATTACK</span><b>철의 타격</b></div>
-            <div class="case-convert-grid">
-              <div class="case-history"><span>① 역사적 사실</span><p>크롬웰의 청교도 혁명에서의 군사 활동은 직접적인 전투 기술을 사용한 강력한 공격을 바탕으로 합니다. 그의 군대는 기병대 중심의 빠르고 강력한 충격 전술을 사용하여 전투의 흐름을 단번에 바꾸는 능력을 보여주었습니다. 이를 스킬에 반영했습니다.</p></div>
-              <div class="case-game-effect"><span>② 게임 기술</span><p>전방으로 기병을 진격시켜 경로상의 적들에게 물리 피해를 입히고, 첫 번째로 적중한 적을 일정 시간 <b>기절</b>시킵니다.</p></div>
-            </div>
-            <div class="case-link"><span>연결 논리</span><p>빠른 기병 돌격과 강한 충격 전술을 <b>‘돌진 + 피해 + 기절’</b>이라는 공격 기술로 바꾸었습니다.</p></div>
-          </article>
-
-          <article class="case-skill-detail defense">
-            <div class="case-skill-top"><span>W · DEFENSE</span><b>공화국의 권위</b></div>
-            <div class="case-convert-grid">
-              <div class="case-history"><span>① 역사적 사실</span><p>크롬웰은 호국경(Lord Protector)으로서 공화국 체제를 수립하면서 강력한 정치적 권위를 행사했습니다. 이 기술은 그의 지도력이 불안정한 정치적 상황 속에서 이상을 실현하기 위한 자기 방어와 정치적 견고함을 상징합니다.</p></div>
-              <div class="case-game-effect"><span>② 게임 기술</span><p>자신에게 <b>보호막</b>을 부여하며, 일정 시간 동안 받는 군중 제어 효과의 지속 시간을 감소시킵니다.</p></div>
-            </div>
-            <div class="case-link"><span>연결 논리</span><p>정치적 권위와 체제 유지 능력을 적의 방해를 버티는 <b>‘자기 방어와 저항’</b> 효과로 표현했습니다.</p></div>
-          </article>
-
-          <article class="case-skill-detail economy">
-            <div class="case-skill-top"><span>E · SUPPORT</span><b>젠트리의 힘</b></div>
-            <div class="case-convert-grid">
-              <div class="case-history"><span>① 역사적 사실</span><p>젠트리 계층, 즉 중산계급 지주는 크롬웰에게 중요한 지지 기반이었습니다. 그들은 크롬웰의 정치적 힘을 강화하는 데 있어 필수적인 역할을 했으며, 이를 통해 경제적 자원과 지방의 지원을 확보할 수 있었습니다. 이 기술은 젠트리의 지원이 군사와 경제적 관점에서 중요했던 것을 반영합니다.</p></div>
-              <div class="case-game-effect"><span>② 게임 기술</span><p>지정된 지역에서 젠트리 지주들의 지원을 받아, 효과가 지속되는 동안 <b>획득 골드가 증가</b>하고 아이템 구매 비용이 낮아집니다.</p></div>
-            </div>
-            <div class="case-link"><span>연결 논리</span><p>정치적 지지 기반이 제공한 경제적·지역적 자원을 <b>‘골드 수급 증가 + 구매 비용 감소’</b>라는 지원 기술로 표현했습니다.</p></div>
-          </article>
-
-          <article class="case-skill-detail ultimate">
-            <div class="case-skill-top"><span>R · ULTIMATE</span><b>신앙의 굴레</b></div>
-            <div class="case-convert-grid">
-              <div class="case-history"><span>① 역사적 사실</span><p>크롬웰의 통치 기간 동안 그의 종교적 신념과 청교도적 가치는 그의 정책에 심대한 영향을 미쳤습니다. 이러한 종교적 통치는 초기에는 체제를 안정시키고 강화하는 데 기여했지만, 지나친 엄격함과 통제는 나중에 민중의 불만을 초래했습니다. 이 스킬은 단기적인 강화 효과와 장기적인 불리함을 통해 이런 이중적 효과를 나타내고자 합니다.</p></div>
-              <div class="case-game-effect"><span>② 게임 기술</span><p>궁극기를 발동하면 자신과 주변 아군이 일정 시간 강력한 효과를 받지만, 지속 시간이 끝나면 일정 시간 동안 아군이 받는 <b>치유 효과가 감소</b>합니다.</p></div>
-            </div>
-            <div class="case-link"><span>연결 논리</span><p>통치의 <b>단기적인 강화 효과와 장기적인 불리함</b>을 한 기술 안에 함께 넣어, 역사적 사실의 양면성을 게임 규칙으로 나타냈습니다.</p></div>
-          </article>
-        </div>
-
-        <div class="case-stat-bridge">
-          <div class="case-stat-icon">★</div>
-          <div><span>기술이 아니라 ‘능력치’로 만들 수도 있습니다.</span><b>예: 신형군과 군사 활동 → 군사지휘력 ★★★★★</b><p>중요한 것은 형식이 아니라 근거입니다. 같은 역사적 사실도 ‘기술’로 표현할 수도 있고 ‘능력치’로 표현할 수도 있습니다.</p></div>
-        </div>
-
-        <div class="case-judge-line">
-          <div><span>GOOD BUILD</span><b>멋진 이름보다 ‘근거 있는 연결’이 더 중요합니다.</b></div>
-          <p>각 게임 요소 아래에서 <strong>“어떤 역사적 사실 때문에 이런 효과를 만들었는가?”</strong>를 자신의 말로 설명할 수 있다면 좋은 빌드입니다.</p>
-        </div>
-      </div>
+    const caseTabs = `<div class="example-case-tabs" role="tablist" aria-label="사례 선택">
+      <button id="caseCromwell" class="${exampleCase === "cromwell" ? "active" : ""}"><small>CASE 01</small><b>올리버 크롬웰</b><span>청교도 혁명</span></button>
+      <button id="caseWilliam" class="${exampleCase === "william" ? "active" : ""}"><small>CASE 02</small><b>윌리엄 3세</b><span>명예혁명</span></button>
+      <button id="casePaine" class="${exampleCase === "paine" ? "active" : ""}"><small>CASE 03</small><b>토머스 페인</b><span>미국 독립 혁명</span></button>
     </div>`;
+
+    const exampleIntro = `<div class="example-copy example-copy-wide">
+      <div class="quest-badge">TEACHER DEMO · HOW TO BUILD</div>
+      <h2>게임을 몰라도 괜찮아요.<br><span>역사를 게임 규칙으로 바꾸는 연습</span></h2>
+      <p>이 사례는 특정 게임의 규칙을 외우라는 뜻이 아닙니다. <b>역사적 사실을 정확히 설명하고</b>, 그 사실이 보여 주는 특징을 생각한 뒤, 그 특징을 <b>기술 또는 능력치</b>라는 간단한 게임 표현으로 옮기는 과정을 보여 줍니다. 사례 속 인물과 기술을 그대로 따라 쓰기보다, <b>‘왜 이런 표현이 나왔는지’</b>를 읽어 보세요.</p>
+      <div class="game-glossary">
+        <div><span>★ 능력치</span><b>“이 인물은 무엇을 얼마나 잘했나?”</b><p>지휘력, 설득력, 통치력처럼 인물의 강점과 약점을 별이나 점수로 표현합니다.</p></div>
+        <div><span>⚡ 기술</span><b>“특정 상황에서 어떤 일이 일어나나?”</b><p>돌격, 설득, 지원 요청처럼 역사적 행동이나 영향이 작동하는 모습을 효과로 표현합니다.</p></div>
+        <div><span>↔ 부작용</span><b>“강점 뒤에 어떤 한계가 있었나?”</b><p>역사 인물을 무조건 영웅으로 만들지 않고, 같은 특징이 낳은 문제나 한계도 게임 규칙으로 넣을 수 있습니다.</p></div>
+      </div>
+      <div class="demo-tip demo-tip-strong"><b>BUILD FORMULA</b><span><strong>① 역사적 사실</strong> → <strong>② 이 사실이 보여 주는 의미</strong> → <strong>③ 기술/능력치로 표현</strong> → <strong>④ 연결 이유를 자신의 말로 설명</strong></span></div>
+      <div class="demo-reading-guide"><b>좋은 사례를 읽는 방법</b><span>게임 효과가 화려한지 보지 마세요. <strong>‘이 역사적 사실이라면 정말 이런 능력이나 효과로 표현할 수 있나?’</strong>를 따져 보는 것이 핵심입니다.</span></div>
+    </div>`;
+
+    const cromwellCase = `<div class="case-game-card case-game-card-detailed" aria-label="올리버 크롬웰 교사 시범 게임 빌드">
+      <div class="case-card-glow"></div>
+      <div class="case-card-header">
+        <div class="case-rank"><small>DEMO</small><b>S</b></div>
+        <div class="case-title-block"><span>HISTORICAL CHARACTER BUILD</span><h3>철의 신념가, 올리버 크롬웰</h3><p>전투·조직·통치의 역사적 사실을 기술과 능력치로 섞어 표현한 사례</p></div>
+        <div class="case-role"><span>CASE TYPE</span><b>MIXED BUILD</b><small>기술 + 능력치 + 부작용</small></div>
+      </div>
+      <div class="case-event-band case-event-band-rich"><div><span>MAIN EVENT</span><b>청교도 혁명과 공화정</b><p>영국에서는 국왕의 권한과 의회의 권리를 둘러싼 갈등이 심해지면서 내전이 벌어졌습니다. 크롬웰은 이 과정에서 의회파의 중요한 군사 지도자로 활약했고, 신형군의 운영과 전투에서 큰 영향력을 보였습니다. 왕당파가 패배한 뒤 찰스 1세가 처형되고 공화정이 수립되었으며, 크롬웰은 이후 호국경으로 강한 정치적 권력을 행사했습니다. 그의 청교도적 가치와 엄격한 통치는 질서와 통제에 힘을 주었지만, 동시에 반발과 불만을 낳기도 했습니다. 따라서 크롬웰을 캐릭터로 만든다면 단순히 ‘전투를 잘하는 사람’이 아니라 군사 조직, 정치 권력, 지지 기반, 종교적 통치의 여러 면을 함께 표현할 수 있습니다.</p></div><div class="case-build-path"><span>HISTORY</span><i>→</i><span>MEANING</span><i>→</i><span>GAME</span></div></div>
+      <div class="case-skill-list">
+        <article class="case-skill-detail passive"><div class="case-skill-top"><span>기술 · 팀 강화</span><b>신형군의 충성</b></div><div class="case-three-step"><div class="case-history"><span>① 역사적 사실</span><p>크롬웰은 신형군의 창설자 그 자체는 아니지만 그 운영에 큰 영향을 미쳤습니다. 신형군은 비교적 체계적인 조직과 훈련을 바탕으로 전투력을 높였고, 크롬웰의 지도력은 병사들의 결속과 충성에 중요한 영향을 주었습니다.</p></div><div class="case-meaning"><span>② 이 사실의 의미</span><p>크롬웰의 힘은 혼자 강하게 싸운 데만 있지 않고, <b>조직 전체가 더 잘 움직이도록 이끄는 지휘 능력</b>에서도 찾을 수 있습니다.</p></div><div class="case-game-effect"><span>③ 게임 표현</span><p><b>주변 동료의 방어력과 사기를 잠시 높이는 기술</b>로 표현합니다.</p></div></div><div class="case-link"><span>왜 이렇게 연결했을까?</span><p>‘병사들의 조직력과 충성’이라는 역사적 사실을 ‘주변 아군이 강해지는 효과’로 바꾼 것입니다. 게임을 모르는 친구라면 <b>“함께 있는 동료들이 더 잘 버티게 만드는 지휘 기술”</b>이라고 이해하면 됩니다.</p></div></article>
+        <article class="case-skill-detail attack"><div class="case-skill-top"><span>기술 · 돌격</span><b>철의 타격</b></div><div class="case-three-step"><div class="case-history"><span>① 역사적 사실</span><p>크롬웰의 군사 활동에서는 기병을 활용한 빠르고 강한 공격이 중요한 역할을 했습니다. 기병의 충격력과 기동성을 이용해 적의 진형을 흔들고 전투의 흐름을 바꾸는 방식은 그의 군사적 이미지를 잘 보여 줍니다.</p></div><div class="case-meaning"><span>② 이 사실의 의미</span><p><b>빠른 판단과 강한 돌파력</b>을 가진 군사 지도자라는 특징을 끌어낼 수 있습니다.</p></div><div class="case-game-effect"><span>③ 게임 표현</span><p>기병과 함께 앞으로 돌진해 적에게 피해를 주고, 첫 번째 적을 잠시 움직이지 못하게 하는 <b>‘돌진 기술’</b>로 표현합니다.</p></div></div><div class="case-link"><span>왜 이렇게 연결했을까?</span><p>역사의 ‘빠른 기병 공격’을 게임의 ‘빠른 돌진과 충격’으로 바꾼 것입니다. 역사적 행동과 게임 효과의 모습이 서로 닮아 있기 때문에 연결이 자연스럽습니다.</p></div></article>
+        <article class="case-skill-detail defense"><div class="case-skill-top"><span>능력치 · 정치</span><b>통치력 ★★★★☆</b></div><div class="case-three-step"><div class="case-history"><span>① 역사적 사실</span><p>크롬웰은 공화정 아래에서 호국경이 되어 강한 정치적 권위를 행사했습니다. 내전 이후 혼란스러운 상황에서 국가를 통치했지만, 그의 권력 행사는 공화정의 이상과 실제 통치 사이의 긴장을 보여 주기도 합니다.</p></div><div class="case-meaning"><span>② 이 사실의 의미</span><p>정치적 혼란 속에서 체제를 유지할 수 있는 <b>강한 통치력</b>이 있었지만, 모두의 동의를 얻은 안정적인 정치라고만 보기는 어렵습니다.</p></div><div class="case-game-effect"><span>③ 게임 표현</span><p><b>통치력 ★★★★☆</b>로 설정합니다. 높은 편이지만 만점은 주지 않습니다.</p></div></div><div class="case-link"><span>왜 이렇게 연결했을까?</span><p>능력치는 꼭 ‘잘했다/못했다’의 칭찬 점수가 아닙니다. 실제 역사에서 권력을 유지하고 정책을 실행한 힘은 높게 평가하되, 정치적 갈등과 한계까지 생각해 만점에서 한 칸을 뺀 것입니다.</p></div></article>
+        <article class="case-skill-detail economy"><div class="case-skill-top"><span>기술 · 지원</span><b>젠트리의 지원</b></div><div class="case-three-step"><div class="case-history"><span>① 역사적 사실</span><p>젠트리 계층은 크롬웰의 중요한 지지 기반 가운데 하나였습니다. 이들의 정치적·경제적 지원은 지방에서 세력을 확보하고 군사와 정치 활동을 이어 가는 데 도움이 되었습니다.</p></div><div class="case-meaning"><span>② 이 사실의 의미</span><p>역사 인물의 힘은 개인의 능력뿐 아니라 <b>누가 그를 지지하고 어떤 자원을 제공했는가</b>에 따라서도 달라질 수 있습니다.</p></div><div class="case-game-effect"><span>③ 게임 표현</span><p>일정 시간 동안 필요한 자원을 더 쉽게 얻거나 비용을 줄여 주는 <b>‘지원 기술’</b>로 표현합니다.</p></div></div><div class="case-link"><span>왜 이렇게 연결했을까?</span><p>지지 세력이 제공한 돈·물자·지역 기반을 게임의 ‘자원 보너스’로 옮긴 것입니다. 칼을 휘두르는 행동이 아니어도 충분히 기술이 될 수 있다는 점을 보여 줍니다.</p></div></article>
+        <article class="case-skill-detail ultimate"><div class="case-skill-top"><span>기술 · 강화 + 부작용</span><b>신앙의 굴레</b></div><div class="case-three-step"><div class="case-history"><span>① 역사적 사실</span><p>크롬웰의 청교도적 신념은 통치와 정책에 큰 영향을 주었습니다. 엄격한 종교적 가치와 통제는 체제를 단단하게 유지하는 데 도움이 되기도 했지만, 지나친 엄격함은 사람들의 불만과 반발을 낳는 요인이 되기도 했습니다.</p></div><div class="case-meaning"><span>② 이 사실의 의미</span><p>하나의 특징이 항상 장점으로만 작용한 것이 아니라, <b>단기적으로 힘을 주면서 장기적으로는 부담을 만들 수 있는 양면성</b>이 있었다고 해석할 수 있습니다.</p></div><div class="case-game-effect"><span>③ 게임 표현</span><p>잠시 자신과 동료를 크게 강화하지만, 효과가 끝나면 일정 시간 능력이 떨어지는 <b>‘강화 후 부작용’ 기술</b>로 표현합니다.</p></div></div><div class="case-link"><span>왜 이렇게 연결했을까?</span><p>역사적 사실의 장점과 한계를 한 기술 안에 모두 넣었습니다. 이런 표현은 인물을 무조건 영웅으로 만드는 것을 피하고, <b>역사의 복잡한 면을 게임 규칙으로 보여 주는 좋은 방법</b>입니다.</p></div></article>
+      </div>
+      <div class="case-judge-line"><div><span>이 사례에서 배울 점</span><b>한 인물 안에서도 기술과 능력치를 섞어 사용할 수 있습니다.</b></div><p>중요한 것은 형식을 통일하는 것이 아니라, 각각의 게임 요소가 <strong>서로 다른 역사적 사실과 설명 가능한 관계</strong>를 갖도록 만드는 것입니다.</p></div>
+    </div>`;
+
+    const williamCase = `<div class="case-game-card case-game-card-detailed case-theme-blue" aria-label="윌리엄 3세 교사 시범 게임 빌드">
+      <div class="case-card-glow"></div>
+      <div class="case-card-header"><div class="case-rank"><small>DEMO</small><b>A</b></div><div class="case-title-block"><span>HISTORICAL CHARACTER BUILD</span><h3>계약의 왕, 윌리엄 3세</h3><p>전투보다 정치 제도와 권력 관계를 게임 규칙으로 바꾸는 방법을 보여 주는 사례</p></div><div class="case-role"><span>CASE TYPE</span><b>CONTROL BUILD</b><small>정당성 · 의회 · 권력 제한</small></div></div>
+      <div class="case-event-band case-event-band-rich"><div><span>MAIN EVENT</span><b>명예혁명과 입헌군주정의 발전</b><p>제임스 2세의 전제적 통치와 가톨릭 우대 정책에 대한 반발이 커지자 영국 의회의 유력 인사들은 네덜란드의 오라녜 공 윌리엄에게 영국으로 와 줄 것을 요청했습니다. 윌리엄은 제임스 2세의 딸 메리와 함께 영국의 왕위를 이어받았고, 이 과정에서 의회와 왕의 관계가 크게 달라졌습니다. 1689년 권리장전은 국왕이 의회의 동의 없이 법을 정지하거나 과세하는 것을 어렵게 만들고 의회의 권리를 강화했습니다. 이 사건은 왕이 마음대로 통치하는 절대왕정에서 벗어나, 법과 의회의 제약을 받는 입헌군주정이 발전하는 중요한 계기가 되었습니다. 따라서 윌리엄 3세의 사례는 ‘강한 공격 기술’이 없어도 정치 제도와 권력의 변화만으로 충분히 흥미로운 캐릭터를 만들 수 있음을 보여 줍니다.</p></div><div class="case-build-path"><span>EVENT</span><i>→</i><span>RULE</span><i>→</i><span>GAME</span></div></div>
+      <div class="case-skill-list">
+        <article class="case-skill-detail passive"><div class="case-skill-top"><span>능력치 · 정치</span><b>정당성 ★★★★☆</b></div><div class="case-three-step"><div class="case-history"><span>① 역사적 사실</span><p>윌리엄은 영국 왕위를 단순히 무력으로 빼앗은 인물로만 보기 어렵습니다. 제임스 2세에 반대하던 의회 세력의 초청을 받았고, 왕위 계승권을 가진 메리와 함께 공동으로 왕위에 올랐습니다.</p></div><div class="case-meaning"><span>② 이 사실의 의미</span><p>그의 권력은 개인의 군사력만이 아니라 <b>의회의 지지와 왕위 계승의 명분</b>을 함께 바탕으로 했습니다.</p></div><div class="case-game-effect"><span>③ 게임 표현</span><p><b>정당성 ★★★★☆</b>. 새로운 지역을 통치할 때 반발이 줄어드는 능력치로 설정합니다.</p></div></div><div class="case-link"><span>연결 이유</span><p>정치에서 ‘사람들이 왜 그 권력을 인정하는가’를 게임의 정당성 수치로 바꾼 것입니다. 군사적 승리뿐 아니라 <b>제도와 지지 기반도 능력치가 될 수 있음</b>을 보여 줍니다.</p></div></article>
+        <article class="case-skill-detail defense"><div class="case-skill-top"><span>기술 · 제도</span><b>권리장전</b></div><div class="case-three-step"><div class="case-history"><span>① 역사적 사실</span><p>윌리엄과 메리의 즉위 뒤 권리장전이 마련되면서 국왕의 권한은 이전보다 뚜렷한 제약을 받게 되었습니다. 특히 과세와 법 집행에서 의회의 역할이 강화되면서 왕과 의회 사이의 권력 관계가 달라졌습니다.</p></div><div class="case-meaning"><span>② 이 사실의 의미</span><p>정치 권력이 한 사람에게 무제한으로 집중되지 않도록 <b>규칙을 만들어 권력을 제한하는 변화</b>라고 볼 수 있습니다.</p></div><div class="case-game-effect"><span>③ 게임 표현</span><p>발동 후 일정 시간 동안 누구도 혼자서 중요한 결정을 내릴 수 없고, <b>팀의 동의가 있어야 강력한 행동을 사용할 수 있는 ‘규칙 변경’ 기술</b>로 표현합니다.</p></div></div><div class="case-link"><span>연결 이유</span><p>권리장전을 단순한 ‘방어막’으로 바꾸기보다, 게임 자체의 규칙을 바꾸는 기술로 표현했습니다. <b>역사에서 제도가 바뀌었다면 게임에서도 규칙이 바뀌게 하는 것</b>이 가장 직접적인 번역이기 때문입니다.</p></div></article>
+        <article class="case-skill-detail economy"><div class="case-skill-top"><span>기술 · 협력</span><b>의회의 승인</b></div><div class="case-three-step"><div class="case-history"><span>① 역사적 사실</span><p>명예혁명 이후 국왕은 의회를 무시하고 마음대로 세금을 거두거나 법을 운영하기 어려워졌습니다. 중요한 국정 운영에서 의회의 동의와 협력이 더욱 중요해졌습니다.</p></div><div class="case-meaning"><span>② 이 사실의 의미</span><p>통치는 ‘왕 혼자 명령하면 끝나는 방식’에서 <b>다른 정치 세력과 협의해야 하는 방식</b>으로 이동했습니다.</p></div><div class="case-game-effect"><span>③ 게임 표현</span><p>혼자 사용하면 효과가 약하지만, 동료의 동의를 받으면 효과가 크게 증가하는 <b>협력 기술</b>로 표현합니다.</p></div></div><div class="case-link"><span>연결 이유</span><p>의회 동의가 중요해진 역사적 변화를 ‘협력할수록 강해지는 효과’로 바꾼 것입니다. 전투 사건이 아니어도 권력 관계의 변화를 게임 규칙으로 만들 수 있습니다.</p></div></article>
+        <article class="case-skill-detail ultimate"><div class="case-skill-top"><span>능력치 · 한계까지 표현</span><b>왕권 ★★★☆☆ / 의회 협력 ★★★★★</b></div><div class="case-three-step"><div class="case-history"><span>① 역사적 사실</span><p>윌리엄 3세는 분명 국왕이었지만 명예혁명 이후의 영국 국왕은 이전과 같은 방식으로 절대적인 권력을 행사하기 어려웠습니다. 반대로 의회는 점차 더 중요한 정치적 위치를 차지했습니다.</p></div><div class="case-meaning"><span>② 이 사실의 의미</span><p>이 인물의 특징을 ‘왕이니까 모든 능력치가 높다’고 볼 수 없습니다. 오히려 <b>개인 권한은 제한되고, 제도 안에서 협력하는 능력이 더 중요해진 시대 변화</b>가 핵심입니다.</p></div><div class="case-game-effect"><span>③ 게임 표현</span><p><b>왕권 ★★★☆☆</b>, <b>의회 협력 ★★★★★</b>처럼 서로 다른 두 능력치를 대비시킵니다.</p></div></div><div class="case-link"><span>연결 이유</span><p>능력치는 인물을 칭찬하는 점수가 아니라 역사적 상황을 표현하는 도구입니다. 낮은 능력치도 실패가 아니라 <b>그 시대에 권력이 어떻게 제한되었는지 보여 주는 설명</b>이 될 수 있습니다.</p></div></article>
+      </div>
+      <div class="case-judge-line"><div><span>이 사례에서 배울 점</span><b>전쟁이 없어도 ‘정치 규칙의 변화’ 자체가 훌륭한 게임 재료입니다.</b></div><p>역사 사건이 제도와 권력 관계를 바꾸었다면, 공격력보다 <strong>규칙·협력·제한·정당성</strong> 같은 게임 요소를 떠올려 보세요.</p></div>
+    </div>`;
+
+    const paineCase = `<div class="case-game-card case-game-card-detailed case-theme-gold" aria-label="토머스 페인 교사 시범 게임 빌드">
+      <div class="case-card-glow"></div>
+      <div class="case-card-header"><div class="case-rank"><small>DEMO</small><b>A</b></div><div class="case-title-block"><span>HISTORICAL CHARACTER BUILD</span><h3>문장으로 전장을 바꾼 자, 토머스 페인</h3><p>칼이나 군대가 아니라 글과 설득이 역사에 미친 영향을 게임 요소로 만드는 사례</p></div><div class="case-role"><span>CASE TYPE</span><b>INFLUENCE BUILD</b><small>설득 · 여론 · 사기</small></div></div>
+      <div class="case-event-band case-event-band-rich"><div><span>MAIN EVENT</span><b>미국 독립 혁명</b><p>북아메리카 식민지에서는 영국의 과세와 통제에 대한 불만이 커지며 독립을 둘러싼 논쟁이 확산되었습니다. 이때 토머스 페인은 1776년 소책자 『상식(Common Sense)』을 통해 왕정의 문제점을 비판하고 식민지가 영국으로부터 독립해야 한다고 주장했습니다. 그는 전문 정치인만 이해할 수 있는 어려운 표현보다 비교적 쉽고 직접적인 언어를 사용해 많은 사람에게 독립의 필요성을 전달했습니다. 독립전쟁이 어려움에 빠졌을 때는 『미국의 위기(The American Crisis)』를 통해 사람들의 사기와 의지를 북돋우려 했습니다. 따라서 페인의 사례는 역사적 영향력이 꼭 군대를 직접 지휘하는 힘에서만 나오는 것이 아니라, <b>생각을 퍼뜨리고 사람들의 판단을 변화시키는 힘</b>에서도 나올 수 있음을 보여 줍니다.</p></div><div class="case-build-path"><span>IDEA</span><i>→</i><span>PUBLIC</span><i>→</i><span>GAME</span></div></div>
+      <div class="case-skill-list">
+        <article class="case-skill-detail passive"><div class="case-skill-top"><span>능력치 · 설득</span><b>대중 설득력 ★★★★★</b></div><div class="case-three-step"><div class="case-history"><span>① 역사적 사실</span><p>페인은 『상식』에서 독립 문제를 많은 사람이 이해하기 쉬운 방식으로 설명했습니다. 어려운 정치 이론만 나열하기보다 왕정에 대한 비판과 독립의 필요성을 직접적으로 전달해 독립 논의를 넓히는 데 영향을 주었습니다.</p></div><div class="case-meaning"><span>② 이 사실의 의미</span><p>복잡한 생각을 <b>일반 사람들이 이해하고 공감할 수 있는 말로 바꾸는 능력</b>이 그의 중요한 특징이라고 볼 수 있습니다.</p></div><div class="case-game-effect"><span>③ 게임 표현</span><p><b>대중 설득력 ★★★★★</b>. 같은 주장을 해도 다른 캐릭터보다 더 많은 중립 인물을 자신의 편으로 움직일 수 있습니다.</p></div></div><div class="case-link"><span>연결 이유</span><p>글이 사람의 생각에 영향을 주었다는 사실을 ‘설득 성공률이 높다’는 능력치로 바꾼 것입니다. 능력치는 전투력뿐 아니라 <b>말, 글, 외교, 조직 같은 역사적 힘</b>도 표현할 수 있습니다.</p></div></article>
+        <article class="case-skill-detail attack"><div class="case-skill-top"><span>기술 · 여론 변화</span><b>상식의 한 장</b></div><div class="case-three-step"><div class="case-history"><span>① 역사적 사실</span><p>1776년 『상식』은 식민지가 영국 왕에게 계속 충성해야 하는지, 아니면 독립해야 하는지에 관한 논의를 더 넓은 대중에게 전달했습니다. 책자는 독립을 지지하는 여론이 확산되는 과정에서 중요한 역할을 했습니다.</p></div><div class="case-meaning"><span>② 이 사실의 의미</span><p>한 번의 군사 공격보다 <b>사람들의 생각과 선택이 한쪽으로 움직이는 변화</b>가 핵심입니다.</p></div><div class="case-game-effect"><span>③ 게임 표현</span><p>지역에 있는 중립 인물들의 태도를 조금씩 독립 쪽으로 이동시키는 <b>‘여론 변화’ 기술</b>로 표현합니다.</p></div></div><div class="case-link"><span>연결 이유</span><p>실제 역사에서 소책자가 ‘적을 쓰러뜨린’ 것은 아니지만 사람들의 판단에 영향을 주었습니다. 그래서 피해량이 아니라 <b>생각의 방향을 바꾸는 효과</b>가 더 적절합니다.</p></div></article>
+        <article class="case-skill-detail defense"><div class="case-skill-top"><span>기술 · 사기 회복</span><b>위기의 문장</b></div><div class="case-three-step"><div class="case-history"><span>① 역사적 사실</span><p>독립전쟁이 힘든 시기에 페인은 『미국의 위기』를 써서 독립을 위한 싸움을 계속해야 한다고 주장했습니다. 이런 글은 전쟁이 길어지며 지치고 흔들리는 사람들에게 의지를 북돋우는 역할을 했습니다.</p></div><div class="case-meaning"><span>② 이 사실의 의미</span><p>페인의 글은 새로운 공격 수단이라기보다 <b>포기하려는 사람들의 의지와 사기를 회복시키는 힘</b>으로 볼 수 있습니다.</p></div><div class="case-game-effect"><span>③ 게임 표현</span><p>사기가 낮아진 동료들의 사기를 회복시키고, 일정 시간 후퇴하지 않게 하는 <b>‘사기 회복’ 기술</b>로 표현합니다.</p></div></div><div class="case-link"><span>연결 이유</span><p>역사적 글의 목적과 게임 효과의 목적을 맞춘 것입니다. ‘힘든 상황에서 다시 싸울 의지를 준다’는 공통점이 있기 때문에 자연스럽게 연결됩니다.</p></div></article>
+        <article class="case-skill-detail ultimate"><div class="case-skill-top"><span>능력치 · 한계도 생각하기</span><b>직접 전투력 ★☆☆☆☆ / 영향력 ★★★★★</b></div><div class="case-three-step"><div class="case-history"><span>① 역사적 사실</span><p>페인의 대표적인 역사적 역할은 전장에서 군대를 지휘하는 장군의 역할과 달랐습니다. 그의 강점은 글과 주장으로 독립의 명분을 설명하고 사람들의 태도에 영향을 주는 데 있었습니다.</p></div><div class="case-meaning"><span>② 이 사실의 의미</span><p>역사에서 중요한 인물이라고 해서 모든 능력이 높은 것은 아닙니다. <b>어떤 방식으로 역사에 영향을 주었는지에 따라 능력치의 모양이 달라져야</b> 합니다.</p></div><div class="case-game-effect"><span>③ 게임 표현</span><p><b>직접 전투력 ★☆☆☆☆</b>, <b>사회적 영향력 ★★★★★</b>로 크게 대비시킵니다.</p></div></div><div class="case-link"><span>연결 이유</span><p>‘유명한 인물 = 모든 능력치 만점’으로 만드는 것을 피한 사례입니다. 약한 능력치를 넣는 것도 역사적 사실에 근거한다면 훌륭한 캐릭터 설계가 됩니다.</p></div></article>
+      </div>
+      <div class="case-judge-line"><div><span>이 사례에서 배울 점</span><b>싸우지 않은 인물도 충분히 게임 캐릭터가 될 수 있습니다.</b></div><p>사상가·작가·외교관이라면 <strong>설득, 정보 전달, 여론, 사기, 협력</strong>처럼 그 사람이 실제 역사에서 행사한 힘을 게임 효과로 바꾸면 됩니다.</p></div>
+    </div>`;
+
+    const selectedCase = exampleCase === "william" ? williamCase : (exampleCase === "paine" ? paineCase : cromwellCase);
+    const example = `<div class="example-showcase example-showcase-v3">${exampleIntro}${caseTabs}<div class="example-case-stage">${selectedCase}</div><div class="example-final-guide"><div class="bad"><span>✕ 아쉬운 연결</span><b>“크롬웰은 군인이니까 공격력 ★★★★★”</b><p>틀렸다고 단정할 수는 없지만, 구체적인 역사적 사실과 해석 과정이 보이지 않습니다.</p></div><div class="good"><span>✓ 좋은 연결</span><b>“신형군의 조직과 지휘에 영향 → 조직 전체를 이끄는 힘 → 군사 지휘력 ★★★★★”</b><p>사실, 해석, 게임 표현이 차례로 이어져 왜 그런 능력치를 만들었는지 설명할 수 있습니다.</p></div></div><div class="non-gamer-finish"><b>게임을 잘하는 것이 목표가 아닙니다.</b><p>게임 이름이나 전문 용어를 많이 쓰지 않아도 됩니다. <strong>역사에서 배운 사실을 정확히 이해하고, 그 의미를 자신만의 규칙으로 표현할 수 있으면 충분합니다.</strong> 기술을 만들어도 되고 능력치를 만들어도 됩니다. 가장 중요한 것은 ‘멋진 이름’이 아니라 <strong>역사적 근거가 보이는 연결</strong>입니다.</p></div></div>`;
 
     appEl.innerHTML = `<section class="hero intro-hero game-surface">
       <div class="intro-tabs"><button id="guideTab" class="${introTab === "guide" ? "active" : ""}">🎮 활동 안내</button><button id="exampleTab" class="${introTab === "example" ? "active" : ""}">🧩 사례 보기</button></div>
@@ -434,6 +406,9 @@
     </section>${navHtml({ nextLabel: "캐릭터 생성 시작 →" })}`;
     $("#guideTab")?.addEventListener("click", () => { introTab = "guide"; renderIntro(); });
     $("#exampleTab")?.addEventListener("click", () => { introTab = "example"; renderIntro(); });
+    $("#caseCromwell")?.addEventListener("click", () => { exampleCase = "cromwell"; renderIntro(); window.scrollTo({ top: 0, behavior: "smooth" }); });
+    $("#caseWilliam")?.addEventListener("click", () => { exampleCase = "william"; renderIntro(); window.scrollTo({ top: 0, behavior: "smooth" }); });
+    $("#casePaine")?.addEventListener("click", () => { exampleCase = "paine"; renderIntro(); window.scrollTo({ top: 0, behavior: "smooth" }); });
     bindNav(() => { state.step = 2; queueSave(); renderApp(); window.scrollTo(0, 0); });
   }
 

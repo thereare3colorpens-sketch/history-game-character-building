@@ -230,3 +230,50 @@ html{scroll-behavior:smooth}
   .final-profile-copy{padding:17px}
   .final-build-grid{grid-template-columns:1fr}
 }
+
+/* v4.3 — non-gamer-friendly multi-case teaching examples */
+.game-glossary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:18px 0 0}
+.game-glossary>div{padding:15px 16px;border-radius:16px;background:linear-gradient(145deg,#fff,#f5f7ff);border:1px solid #dfe4f2;box-shadow:0 10px 28px rgba(35,47,78,.07)}
+.game-glossary span,.game-glossary b,.game-glossary p{display:block}
+.game-glossary span{font-family:'DnfBitbeatV2','SUITE',sans-serif;font-size:11px;letter-spacing:.04em;color:#6d4aff}
+.game-glossary b{margin-top:5px;font-size:15px;line-height:1.4;color:#202b40}
+.game-glossary p{margin:6px 0 0;font-size:13.5px;line-height:1.65;color:#606c80}
+
+.example-case-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:8px;border-radius:18px;background:linear-gradient(135deg,#11182a,#1d2945);border:1px solid #35415c;box-shadow:0 16px 40px rgba(9,15,29,.16)}
+.example-case-tabs button{appearance:none;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:13px 14px;text-align:left;background:rgba(255,255,255,.045);color:#eaf0fb;cursor:pointer;transition:transform .2s ease,background .2s ease,border-color .2s ease,box-shadow .2s ease}
+.example-case-tabs button:hover{transform:translateY(-2px);background:rgba(255,255,255,.075);border-color:rgba(151,131,255,.42)}
+.example-case-tabs button.active{background:linear-gradient(135deg,rgba(109,74,255,.34),rgba(34,211,238,.14));border-color:rgba(152,133,255,.72);box-shadow:0 9px 24px rgba(72,49,158,.25),inset 0 1px 0 rgba(255,255,255,.08)}
+.example-case-tabs small,.example-case-tabs b,.example-case-tabs span{display:block}
+.example-case-tabs small{font-family:'DnfBitbeatV2','SUITE',sans-serif;font-size:9px;letter-spacing:.09em;color:#9ba9c0}
+.example-case-tabs b{margin-top:5px;font-size:16px;color:#fff}
+.example-case-tabs span{margin-top:4px;font-size:12px;color:#b9c4d6}
+.example-case-stage{animation:caseStageIn .32s cubic-bezier(.2,.8,.2,1)}
+@keyframes caseStageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.case-three-step{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.8fr) minmax(230px,.75fr);gap:11px;margin-top:12px}
+.case-meaning{border-radius:12px;padding:12px 13px;background:linear-gradient(145deg,rgba(246,196,83,.09),rgba(255,255,255,.035));border:1px solid rgba(246,196,83,.15)}
+.case-meaning span{display:block;font-family:'DnfBitbeatV2','SUITE',sans-serif;font-size:10.5px;letter-spacing:.05em;color:#f6c453}
+.case-meaning p{margin:6px 0 0;font-size:14px;line-height:1.72;color:#e8edf6}
+.case-meaning b{color:#fff}
+.case-theme-blue{background:radial-gradient(circle at 86% 2%,rgba(14,165,233,.27),transparent 28%),radial-gradient(circle at 5% 92%,rgba(59,130,246,.15),transparent 26%),linear-gradient(145deg,#081421 0%,#12273a 55%,#0a1726 100%)}
+.case-theme-blue .case-rank{background:linear-gradient(145deg,#0ea5e9,#2557a7)}
+.case-theme-gold{background:radial-gradient(circle at 86% 2%,rgba(246,196,83,.28),transparent 28%),radial-gradient(circle at 5% 92%,rgba(244,114,182,.12),transparent 25%),linear-gradient(145deg,#15110b 0%,#2d2415 55%,#17130c 100%)}
+.case-theme-gold .case-rank{background:linear-gradient(145deg,#f59e0b,#9a5f08)}
+.case-theme-gold .case-card-header,.case-theme-gold .case-skill-detail{border-color:rgba(246,196,83,.17)}
+
+.example-final-guide{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.example-final-guide>div{padding:16px 17px;border-radius:16px;border:1px solid #dce2ee;background:#fff;box-shadow:0 9px 25px rgba(35,47,78,.06)}
+.example-final-guide span,.example-final-guide b{display:block}
+.example-final-guide span{font-family:'DnfBitbeatV2','SUITE',sans-serif;font-size:11px;letter-spacing:.04em}
+.example-final-guide b{margin-top:6px;font-size:15px;line-height:1.5;color:#273147}
+.example-final-guide p{margin:7px 0 0;font-size:13.5px;line-height:1.65;color:#637083}
+.example-final-guide .bad{background:linear-gradient(145deg,#fff8f7,#fff);border-color:#f2d5d2}.example-final-guide .bad span{color:#d45549}
+.example-final-guide .good{background:linear-gradient(145deg,#f5fff9,#fff);border-color:#cae9d6}.example-final-guide .good span{color:#228b55}
+.non-gamer-finish{padding:20px 21px;border-radius:18px;background:radial-gradient(circle at 90% 0%,rgba(109,74,255,.18),transparent 32%),linear-gradient(145deg,#111827,#1b2942);color:#edf3fd;border:1px solid #35435f;box-shadow:0 14px 34px rgba(11,18,34,.16)}
+.non-gamer-finish b{display:block;font-family:'DnfBitbeatV2','SUITE',sans-serif;font-size:19px;color:#f6c453}
+.non-gamer-finish p{margin:8px 0 0;font-size:15px;line-height:1.75;color:#d5dfed}
+.non-gamer-finish strong{color:#fff}
+
+@media (max-width:1050px){.case-three-step{grid-template-columns:1fr 1fr}.case-game-effect{grid-column:1/-1}}
+@media (max-width:760px){.game-glossary,.example-case-tabs,.example-final-guide{grid-template-columns:1fr}.case-three-step{grid-template-columns:1fr}.case-game-effect{grid-column:auto}.example-case-tabs button{text-align:center}}
+@media (prefers-reduced-motion:reduce){.example-case-stage,.example-case-tabs button{animation:none;transition:none}}
