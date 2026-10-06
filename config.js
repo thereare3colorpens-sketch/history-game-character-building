@@ -13,7 +13,7 @@ window.HISTORY_APP_CONFIG = {
   },
 
   // 관리자 페이지에 로그인할 실제 Google 계정
-  adminEmail: "teacher@example.com",
+  adminEmail: "thereare3colorpens@gmail.com",
 
   activity: {
     academicYear: "2026",
