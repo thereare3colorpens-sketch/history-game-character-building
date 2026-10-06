@@ -106,7 +106,7 @@
     renderDashboard();
   }
 
-  function exportCsv() {
+  function exportArchiveCsv() {
     const maxElems = Math.max(4, ...rows.map(s => s.gameElements?.length || 0));
     const h = ["학년도", "학년", "활동ID", "활동명", "테스트여부", "반", "번호", "이름", "인물", "대표사건", "사건설명", "인물-사건연결", "근거메모", "진행단계", "제출", "글잠금", "이미지첨부", "화면이탈횟수", "화면이탈총시간초", "클립보드시도횟수", "붙여넣기시도횟수", "붙여넣기시도글자수", "작성시작", "최종제출"];
     for (let i = 1; i <= 4; i++) h.push(`역사사실${i}`);
@@ -131,6 +131,77 @@
 
     const suffix = `${yearFilter}-${gradeFilter}-${activityFilter}`.replace(/[^a-zA-Z0-9가-힣_-]/g, "-");
     blobDownload(`history-character-students-${suffix}.csv`, "\ufeff" + [h.map(csv).join(","), ...lines].join("\n"), "text/csv;charset=utf-8");
+  }
+
+  function exportAssessmentCsv() {
+    const maxElems = Math.max(4, ...rows.map(s => s.gameElements?.length || 0));
+    const h = [
+      "학년도", "학년", "활동명", "반", "번호", "이름", "선택 인물", "대표 사건",
+      "사건 설명", "인물-사건 관계"
+    ];
+    for (let i = 1; i <= 4; i++) h.push(`역사적 사실 ${i}`);
+    for (let i = 1; i <= maxElems; i++) {
+      h.push(
+        `게임요소 ${i}_유형`, `게임요소 ${i}_활용 역사적 사실`, `게임요소 ${i}_이름`,
+        `게임요소 ${i}_능력치 수준`, `게임요소 ${i}_효과`, `게임요소 ${i}_역사 연결 설명`, `게임요소 ${i}_한계·부작용`
+      );
+    }
+    h.push(
+      "AI_역사적 사실 정확성(4)", "AI_역사-게임 연결성(3)", "AI_역사적 해석(2)", "AI_명료성(1)",
+      "AI_초벌 총점(10)", "AI_잘한 점", "AI_보완할 점", "AI_교사 확인 필요",
+      "교사 최종점수(10)", "교사 피드백", "최종 제출 시각"
+    );
+
+    const lines = rows.map(s => {
+      const ev = s.eventStudy || {};
+      const a = s.assessment || {};
+      const ai = a.aiDraft || {};
+      const d = ai.details || {};
+      const out = [
+        s.academicYear, s.schoolGrade, s.activityTitle || s.activityId, s.className, s.studentNumber, s.studentName,
+        s.selectedPerson, ev.eventTitle, ev.eventSummary, ev.personConnection
+      ];
+      for (let i = 0; i < 4; i++) out.push(ev.facts?.[i]?.text || "");
+      for (let i = 0; i < maxElems; i++) {
+        const e = s.gameElements?.[i] || {};
+        const factText = ev.facts?.find(f => f.id === e.factId)?.text || "";
+        out.push(
+          e.kind === "stat" ? "능력치" : (e.kind ? "기술" : ""),
+          factText, e.name || "", e.kind === "stat" ? (e.level ?? "") : "",
+          e.effect || "", e.rationale || "", e.limitation || ""
+        );
+      }
+      out.push(
+        d.historicalAccuracy ?? "", d.linkage ?? "", d.interpretation ?? "", d.clarity ?? "",
+        ai.totalScore ?? a.aiDraftScore ?? "",
+        (ai.strengths || []).join(" / "), (ai.improvements || []).join(" / "),
+        ai.teacherReviewNeeded ? (ai.teacherReviewNote || "확인 필요") : "",
+        a.teacherScore ?? "", a.feedback ?? "", s.submittedAt || s.testSubmittedAt || ""
+      );
+      return out.map(csv).join(",");
+    });
+
+    const suffix = `${yearFilter}-${gradeFilter}-${activityFilter}`.replace(/[^a-zA-Z0-9가-힣_-]/g, "-");
+    blobDownload(`수행평가-학생답안-${suffix}.csv`, "\ufeff" + [h.map(csv).join(","), ...lines].join("\n"), "text/csv;charset=utf-8");
+  }
+
+  function exportScoreSummaryCsv() {
+    const h = [
+      "학년도", "학년", "활동명", "반", "번호", "이름", "선택 인물", "대표 사건",
+      "AI_역사적 사실 정확성(4)", "AI_역사-게임 연결성(3)", "AI_역사적 해석(2)", "AI_명료성(1)",
+      "AI_초벌 총점(10)", "AI_교사 확인 필요", "교사 최종점수(10)", "교사 피드백"
+    ];
+    const lines = rows.map(s => {
+      const a = s.assessment || {}, ai = a.aiDraft || {}, d = ai.details || {}, ev = s.eventStudy || {};
+      return [
+        s.academicYear, s.schoolGrade, s.activityTitle || s.activityId, s.className, s.studentNumber, s.studentName,
+        s.selectedPerson, ev.eventTitle, d.historicalAccuracy ?? "", d.linkage ?? "", d.interpretation ?? "", d.clarity ?? "",
+        ai.totalScore ?? a.aiDraftScore ?? "", ai.teacherReviewNeeded ? (ai.teacherReviewNote || "확인 필요") : "",
+        a.teacherScore ?? "", a.feedback ?? ""
+      ].map(csv).join(",");
+    });
+    const suffix = `${yearFilter}-${gradeFilter}-${activityFilter}`.replace(/[^a-zA-Z0-9가-힣_-]/g, "-");
+    blobDownload(`수행평가-점수요약-${suffix}.csv`, "\ufeff" + [h.map(csv).join(","), ...lines].join("\n"), "text/csv;charset=utf-8");
   }
 
   function exportElementsCsv() {
@@ -261,25 +332,65 @@
 
   function renderDashboard() {
     const { years, grades, activities } = filterOptions();
-    root.innerHTML = `<header class="admin-head">
-      <div><div class="eyebrow">TEACHER DASHBOARD</div><h1>역사 캐릭터 수행평가</h1><p>${rows.length}명 표시 · ${rows.filter(r => r.submitted).length}명 제출 · 전체 ${allRows.length}건 보관</p></div>
-      <div class="admin-actions"><button id="refresh" class="secondary">새로고침</button><button id="csv" class="secondary">학생별 CSV</button><button id="elementsCsv" class="secondary">게임요소 CSV</button><button id="rawJson" class="secondary">원본 JSON</button><button id="batchAi" class="secondary">미평가 제출본 AI 일괄평가</button><button id="logout" class="ghost">로그아웃</button></div>
-    </header>
-    <section class="filter-bar">
+    const submittedCount = rows.filter(r => r.submitted || (r.isTest && r.testSubmittedAt)).length;
+    const aiCount = rows.filter(r => r.assessment?.aiDraftScore != null).length;
+    const teacherCount = rows.filter(r => r.assessment?.teacherScore != null).length;
+    const reviewCount = rows.filter(r => r.assessment?.aiDraft?.teacherReviewNeeded).length;
+
+    root.innerHTML = `<section class="admin-hero">
+      <div class="admin-hero-copy">
+        <div class="eyebrow">TEACHER DASHBOARD</div>
+        <h1>역사 캐릭터 수행평가</h1>
+        <p>학생 답안 확인부터 AI 초벌 검토, 교사 최종평가와 데이터 정리까지 한 화면에서 관리합니다.</p>
+      </div>
+      <div class="admin-hero-side">
+        <div class="current-activity-badge"><span>CURRENT ACTIVITY</span><b>${esc(ACTIVITY.academicYear || "-")} · ${esc(ACTIVITY.schoolGrade || "-")}학년</b><small>${esc(ACTIVITY.title || ACTIVITY.id || "-")}</small></div>
+        <button id="logout" class="admin-logout">로그아웃</button>
+      </div>
+    </section>
+
+    <section class="admin-stat-grid">
+      <div class="admin-stat-card purple"><span>현재 표시</span><b>${rows.length}</b><small>필터 조건에 해당하는 학생</small></div>
+      <div class="admin-stat-card cyan"><span>제출 완료</span><b>${submittedCount}</b><small>${rows.length ? Math.round(submittedCount / rows.length * 100) : 0}% 완료</small></div>
+      <div class="admin-stat-card gold"><span>AI 초벌평가</span><b>${aiCount}</b><small>${reviewCount ? `교사 확인 필요 ${reviewCount}명` : "검토 신호 없음"}</small></div>
+      <div class="admin-stat-card green"><span>최종평가 완료</span><b>${teacherCount}</b><small>교사가 점수를 확정한 학생</small></div>
+    </section>
+
+    <section class="admin-toolbar-card">
+      <div class="admin-toolbar-title"><div><span>DATA & ACTIONS</span><b>평가에 필요한 자료만 바로 내려받기</b><small>화면 이탈·클립보드 로그 같은 기술 정보는 아래 고급 백업에만 포함됩니다.</small></div></div>
+      <div class="admin-toolbar-actions">
+        <button id="assessmentCsv" class="admin-download primary-download"><span>📊</span><div><b>학생 답안 CSV</b><small>작성 내용 + AI 초벌 + 교사 평가</small></div></button>
+        <button id="scoreCsv" class="admin-download"><span>✓</span><div><b>점수 요약 CSV</b><small>학생 정보 + AI/최종 점수만</small></div></button>
+        <button id="batchAi" class="admin-download ai-download"><span>✨</span><div><b>AI 일괄평가</b><small>현재 목록의 미평가 제출본</small></div></button>
+        <button id="refresh" class="admin-icon-button" title="새로고침">↻</button>
+      </div>
+      <details class="admin-backup-menu">
+        <summary>고급 / 백업 데이터</summary>
+        <div><button id="archiveCsv" class="secondary small">전체 기록 CSV</button><button id="elementsCsv" class="secondary small">게임요소 분석 CSV</button><button id="rawJson" class="secondary small">원본 JSON</button><span>과정 로그·화면 이탈·붙여넣기 기록 등은 백업 파일에서만 확인합니다.</span></div>
+      </details>
+    </section>
+
+    <section class="filter-bar admin-filter-bar">
+      <div class="filter-heading"><span>FILTER</span><b>학생 목록 범위</b></div>
       <label>학년도<select id="yearFilter"><option value="ALL">전체 학년도</option>${years.map(y => `<option value="${esc(y)}" ${yearFilter === y ? "selected" : ""}>${esc(y)}학년도</option>`).join("")}</select></label>
       <label>학년<select id="gradeFilter"><option value="ALL">전체 학년</option>${grades.map(g => `<option value="${esc(g)}" ${gradeFilter === g ? "selected" : ""}>${esc(g)}학년</option>`).join("")}</select></label>
       <label>활동<select id="activityFilter"><option value="ALL">전체 활동</option>${activities.map(([id, title]) => `<option value="${esc(id)}" ${activityFilter === id ? "selected" : ""}>${esc(title)}</option>`).join("")}</select></label>
-      <label class="test-filter"><input id="includeTest" type="checkbox" ${includeTest ? "checked" : ""}> TEST 데이터 포함</label><div class="filter-summary"><span>현재 설정</span><b>${esc(ACTIVITY.academicYear || "-")} · ${esc(ACTIVITY.schoolGrade || "-")}학년 · ${esc(ACTIVITY.title || ACTIVITY.id || "-")}</b></div>
+      <label class="test-filter"><input id="includeTest" type="checkbox" ${includeTest ? "checked" : ""}> TEST 데이터 포함</label>
     </section>
+
     <div class="admin-grid">
-      <section class="table-card"><table><thead><tr><th>학년도/학년</th><th>학생</th><th>인물 / 사건</th><th>상태</th><th>AI</th><th>화면 이탈</th><th>붙여넣기</th><th></th></tr></thead><tbody>
-        ${rows.map((s, i) => `<tr class="${selected?._docId === s._docId ? "selected-row" : ""}"><td>${esc(s.academicYear || "-")}<small>${esc(s.schoolGrade || "-")}학년${s.isTest ? " · TEST" : ""}</small></td><td><b>${esc(s.className)}반 ${esc(s.studentNumber)}번</b><small>${esc(s.studentName)}</small></td><td>${esc(s.selectedPerson || "-")}<small>${esc(s.eventStudy?.eventTitle || "-")}</small></td><td><span class="status ${s.submitted ? "done" : ""}">${s.submitted ? "제출" : (s.isTest && s.testSubmittedAt ? "TEST 제출확인" : `STEP ${s.step}`)}</span>${s.textLocked && !s.submitted ? `<small>글 잠김</small>` : ""}</td><td>${s.assessment?.aiDraftScore != null ? `<b>${esc(s.assessment.aiDraftScore)}/10</b>` : "—"}</td><td>${awayLogs(s).length}회 · ${human(awayMs(s))}</td><td>${pasteCount(s)}회</td><td><button class="link-btn" data-view="${i}">보기</button></td></tr>`).join("") || `<tr><td colspan="8" class="empty">조건에 맞는 제출물이 없습니다.</td></tr>`}
+      <section class="table-card admin-table-card">
+        <div class="table-card-head"><div><span>STUDENT LIST</span><b>${rows.length}명의 수행 기록</b></div><small>학생을 선택하면 오른쪽에서 답안·과정·평가를 자세히 볼 수 있습니다.</small></div>
+        <table><thead><tr><th>학년도/학년</th><th>학생</th><th>인물 / 사건</th><th>진행</th><th>AI 초벌</th><th>최종점수</th><th>과정 신호</th><th></th></tr></thead><tbody>
+        ${rows.map((s, i) => `<tr class="${selected?._docId === s._docId ? "selected-row" : ""}"><td>${esc(s.academicYear || "-")}<small>${esc(s.schoolGrade || "-")}학년${s.isTest ? " · TEST" : ""}</small></td><td><b>${esc(s.className)}반 ${esc(s.studentNumber)}번</b><small>${esc(s.studentName)}</small></td><td><b class="person-cell">${esc(s.selectedPerson || "-")}</b><small>${esc(s.eventStudy?.eventTitle || "-")}</small></td><td><span class="status ${s.submitted ? "done" : ""}">${s.submitted ? "제출" : (s.isTest && s.testSubmittedAt ? "TEST 제출확인" : `STEP ${s.step}`)}</span>${s.textLocked && !s.submitted ? `<small>글 잠김</small>` : ""}</td><td>${s.assessment?.aiDraftScore != null ? `<b class="score-chip ai">${esc(s.assessment.aiDraftScore)}/10</b>` : `<span class="muted-dash">—</span>`}</td><td>${s.assessment?.teacherScore != null ? `<b class="score-chip teacher">${esc(s.assessment.teacherScore)}/10</b>` : `<span class="muted-dash">—</span>`}</td><td><span class="signal-pill">이탈 ${awayLogs(s).length} · 붙여넣기 ${pasteCount(s)}</span></td><td><button class="link-btn view-button" data-view="${i}">보기</button></td></tr>`).join("") || `<tr><td colspan="8" class="empty">조건에 맞는 제출물이 없습니다.</td></tr>`}
       </tbody></table></section>
       ${renderDetail()}
     </div>`;
 
     root.querySelector("#refresh").onclick = refresh;
-    root.querySelector("#csv").onclick = exportCsv;
+    root.querySelector("#assessmentCsv").onclick = exportAssessmentCsv;
+    root.querySelector("#scoreCsv").onclick = exportScoreSummaryCsv;
+    root.querySelector("#archiveCsv").onclick = exportArchiveCsv;
     root.querySelector("#elementsCsv").onclick = exportElementsCsv;
     root.querySelector("#rawJson").onclick = exportRawJson;
     root.querySelector("#logout").onclick = () => auth.signOut();
