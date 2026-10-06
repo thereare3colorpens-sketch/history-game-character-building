@@ -1,4 +1,5 @@
 (() => {
+  document.body.classList.add("student-app");
   const CFG = window.HISTORY_APP_CONFIG || {};
   const FIREBASE_CONFIG = CFG.firebaseConfig || {};
   const PEOPLE = CFG.people || [];
@@ -309,7 +310,7 @@
         <div class="mission-title"><span>01</span><div><b>퀘스트 진행 방법</b><small>‘역사적 사실 → 게임 표현 → 왜 그렇게 만들었는가’가 핵심입니다.</small></div></div>
         <div class="mission-steps">
           <div><i>①</i><b>대표 사건 1개</b><span>선택한 인물과 연결된 가장 중요한 사건을 충분한 문장으로 설명합니다.</span></div>
-          <div><i>②</i><b>역사적 사실 4개</b><span>대표 사건 안에서 게임 캐릭터의 재료로 쓸 사실을 4개 고릅니다.</span></div>
+          <div><i>②</i><b>역사적 사실 4개</b><span>대표 사건 안에서 게임 요소에 활용할 역사적 사실을 4개 고릅니다.</span></div>
           <div><i>③</i><b>게임 요소 4개 이상</b><span>각 사실을 기술 또는 능력치로 자유롭게 바꾸고 연결 이유를 씁니다.</span></div>
           <div><i>④</i><b>캐릭터 초상화</b><span>역사 글을 확정한 뒤에만 AI 이미지 도구를 사용해 초상화를 만듭니다.</span></div>
         </div>
@@ -332,57 +333,97 @@
       </div>
       <div class="privacy-note"><b>과정 기록만으로 자동 감점하지 않습니다.</b> 기기 오류나 실수도 있을 수 있으므로 화면 이탈 기록은 필요한 경우 작성 과정을 확인하는 참고자료로만 사용합니다.</div>`;
 
-    const example = `<div class="example-showcase example-showcase-v2">
-      <div class="example-copy">
+    const example = `<div class="example-showcase example-showcase-v3">
+      <div class="example-copy example-copy-wide">
         <div class="quest-badge">TEACHER DEMO · SAMPLE BUILD</div>
-        <h2>역사적 사실이<br><span>게임 시스템으로 바뀌는 과정</span></h2>
-        <p>완성본을 그대로 따라 쓰는 것이 아니라, <b>사건 속 사실을 어떤 게임 표현으로 바꿀 수 있는지</b> 보는 시범 자료입니다. 같은 인물을 골라도 어떤 사실을 선택하고 어떻게 해석하느냐에 따라 전혀 다른 캐릭터가 나올 수 있습니다.</p>
-        <div class="demo-tip demo-tip-strong"><b>핵심 공식</b><span>역사적 사실 → 그 사실의 의미를 해석 → 기술 또는 능력치로 표현 → 왜 그렇게 만들었는지 설명</span></div>
+        <h2>역사적 사실을<br><span>게임 언어로 번역하는 법</span></h2>
+        <p>이 사례의 목적은 크롬웰을 그대로 따라 쓰는 것이 아닙니다. <b>먼저 역사적 사실을 충분히 설명하고</b>, 그 사실에서 드러나는 특징을 해석한 뒤, 그 특징을 <b>기술 또는 능력치의 효과</b>로 옮기는 과정을 보는 것입니다.</p>
+        <div class="demo-tip demo-tip-strong">
+          <b>BUILD FORMULA</b>
+          <span><strong>① 역사적 사실</strong> → <strong>② 그 사실의 의미</strong> → <strong>③ 게임 효과</strong> → <strong>④ 왜 이렇게 표현했는지 설명</strong></span>
+        </div>
+        <div class="demo-reading-guide">
+          <b>읽을 때 이것만 확인하세요.</b>
+          <span>‘게임 효과가 멋진가?’보다 <strong>‘역사적 사실과 효과 사이에 설명 가능한 연결이 있는가?’</strong>를 봅니다.</span>
+        </div>
       </div>
 
-      <div class="case-game-card" aria-label="올리버 크롬웰 교사 시범 게임 빌드">
+      <div class="case-game-card case-game-card-detailed" aria-label="올리버 크롬웰 교사 시범 게임 빌드">
         <div class="case-card-glow"></div>
         <div class="case-card-header">
           <div class="case-rank"><small>DEMO</small><b>S</b></div>
           <div class="case-title-block">
             <span>HISTORICAL CHARACTER BUILD</span>
             <h3>철의 신념가, 올리버 크롬웰</h3>
-            <p>청교도 혁명과 공화정을 게임 캐릭터의 능력으로 재해석한 시범 빌드</p>
+            <p>청교도 혁명과 공화정의 역사적 사실을 게임 캐릭터의 기술로 재해석한 시범 빌드</p>
           </div>
           <div class="case-role"><span>ROLE</span><b>COMMANDER</b><small>군사 지도자 · 호국경</small></div>
         </div>
 
-        <div class="case-event-band">
-          <div><span>MAIN EVENT</span><b>청교도 혁명 → 공화정</b></div>
-          <div class="case-build-path"><span>FACT</span><i>→</i><span>MEANING</span><i>→</i><span>GAME</span></div>
+        <div class="case-event-band case-event-band-rich">
+          <div>
+            <span>MAIN EVENT</span>
+            <b>청교도 혁명과 공화정</b>
+            <p>크롬웰은 청교도 혁명 과정에서 의회군의 군사 지도자로 활약했고, 이후 공화정 아래에서 호국경으로 강한 정치적 권위를 행사했습니다. 아래의 기술들은 이 사건 속 군사 조직, 전투, 정치 권력, 지지 기반, 종교적 통치라는 서로 다른 역사적 사실을 각각 게임 효과로 표현한 것입니다.</p>
+          </div>
+          <div class="case-build-path"><span>HISTORY</span><i>→</i><span>MEANING</span><i>→</i><span>GAME</span></div>
         </div>
 
-        <div class="case-skill-grid">
-          <article class="case-skill passive">
+        <div class="case-skill-list">
+          <article class="case-skill-detail passive">
             <div class="case-skill-top"><span>PASSIVE</span><b>신형군의 충성</b></div>
-            <p class="case-effect">근처 아군의 방어력을 높인다.</p>
-            <p class="case-basis"><b>역사 연결</b> 신형군과 군사 조직에 대한 영향, 병사들과의 강한 결속을 ‘아군 강화’로 표현.</p>
+            <div class="case-convert-grid">
+              <div class="case-history"><span>① 역사적 사실</span><p>올리버 크롬웰은 신형군(New Model Army)의 창설자가 아니지만, 그 운영에 큰 영향을 미쳤습니다. 그는 이러한 군사 조직을 통해 군사적 혁신을 추구했으며, 이는 지휘관과 병사 간의 강한 유대와 충성심을 바탕으로 했습니다. 그의 리더십은 병사들이 공포에 굴하지 않고 청교도 혁명의 전장에서 그를 따르게 하는 힘이었습니다.</p></div>
+              <div class="case-game-effect"><span>② 게임 기술</span><p><b>근처 아군 미니언과 챔피언의 방어력을 증가</b>시킵니다.</p></div>
+            </div>
+            <div class="case-link"><span>연결 논리</span><p>군사 조직의 결속과 병사들의 충성이라는 특징을, 크롬웰 주변의 아군이 더 단단해지는 <b>‘아군 강화’ 효과</b>로 표현했습니다.</p></div>
           </article>
-          <article class="case-skill attack">
-            <div class="case-skill-top"><span>SKILL</span><b>철의 타격</b></div>
-            <p class="case-effect">기병이 돌진해 피해를 주고 적을 잠시 멈춘다.</p>
-            <p class="case-basis"><b>역사 연결</b> 빠르고 강한 기병 중심 전투를 ‘돌진 + 기절’ 효과로 변환.</p>
+
+          <article class="case-skill-detail attack">
+            <div class="case-skill-top"><span>Q · ATTACK</span><b>철의 타격</b></div>
+            <div class="case-convert-grid">
+              <div class="case-history"><span>① 역사적 사실</span><p>크롬웰의 청교도 혁명에서의 군사 활동은 직접적인 전투 기술을 사용한 강력한 공격을 바탕으로 합니다. 그의 군대는 기병대 중심의 빠르고 강력한 충격 전술을 사용하여 전투의 흐름을 단번에 바꾸는 능력을 보여주었습니다. 이를 스킬에 반영했습니다.</p></div>
+              <div class="case-game-effect"><span>② 게임 기술</span><p>전방으로 기병을 진격시켜 경로상의 적들에게 물리 피해를 입히고, 첫 번째로 적중한 적을 일정 시간 <b>기절</b>시킵니다.</p></div>
+            </div>
+            <div class="case-link"><span>연결 논리</span><p>빠른 기병 돌격과 강한 충격 전술을 <b>‘돌진 + 피해 + 기절’</b>이라는 공격 기술로 바꾸었습니다.</p></div>
           </article>
-          <article class="case-skill defense">
-            <div class="case-skill-top"><span>SKILL</span><b>공화국의 권위</b></div>
-            <p class="case-effect">자신에게 보호막을 부여하고 방해 효과를 줄인다.</p>
-            <p class="case-basis"><b>역사 연결</b> 호국경으로서 행사한 강한 정치적 권위를 ‘방어 능력’으로 표현.</p>
+
+          <article class="case-skill-detail defense">
+            <div class="case-skill-top"><span>W · DEFENSE</span><b>공화국의 권위</b></div>
+            <div class="case-convert-grid">
+              <div class="case-history"><span>① 역사적 사실</span><p>크롬웰은 호국경(Lord Protector)으로서 공화국 체제를 수립하면서 강력한 정치적 권위를 행사했습니다. 이 기술은 그의 지도력이 불안정한 정치적 상황 속에서 이상을 실현하기 위한 자기 방어와 정치적 견고함을 상징합니다.</p></div>
+              <div class="case-game-effect"><span>② 게임 기술</span><p>자신에게 <b>보호막</b>을 부여하며, 일정 시간 동안 받는 군중 제어 효과의 지속 시간을 감소시킵니다.</p></div>
+            </div>
+            <div class="case-link"><span>연결 논리</span><p>정치적 권위와 체제 유지 능력을 적의 방해를 버티는 <b>‘자기 방어와 저항’</b> 효과로 표현했습니다.</p></div>
           </article>
-          <article class="case-skill ultimate">
-            <div class="case-skill-top"><span>ULTIMATE</span><b>신앙의 굴레</b></div>
-            <p class="case-effect">잠시 강력해지지만 효과가 끝난 뒤 불이익을 받는다.</p>
-            <p class="case-basis"><b>역사 연결</b> 청교도적 통치가 체제를 강화하는 한편 민중의 불만도 낳았다는 양면성을 ‘강화 후 페널티’로 표현.</p>
+
+          <article class="case-skill-detail economy">
+            <div class="case-skill-top"><span>E · SUPPORT</span><b>젠트리의 힘</b></div>
+            <div class="case-convert-grid">
+              <div class="case-history"><span>① 역사적 사실</span><p>젠트리 계층, 즉 중산계급 지주는 크롬웰에게 중요한 지지 기반이었습니다. 그들은 크롬웰의 정치적 힘을 강화하는 데 있어 필수적인 역할을 했으며, 이를 통해 경제적 자원과 지방의 지원을 확보할 수 있었습니다. 이 기술은 젠트리의 지원이 군사와 경제적 관점에서 중요했던 것을 반영합니다.</p></div>
+              <div class="case-game-effect"><span>② 게임 기술</span><p>지정된 지역에서 젠트리 지주들의 지원을 받아, 효과가 지속되는 동안 <b>획득 골드가 증가</b>하고 아이템 구매 비용이 낮아집니다.</p></div>
+            </div>
+            <div class="case-link"><span>연결 논리</span><p>정치적 지지 기반이 제공한 경제적·지역적 자원을 <b>‘골드 수급 증가 + 구매 비용 감소’</b>라는 지원 기술로 표현했습니다.</p></div>
           </article>
+
+          <article class="case-skill-detail ultimate">
+            <div class="case-skill-top"><span>R · ULTIMATE</span><b>신앙의 굴레</b></div>
+            <div class="case-convert-grid">
+              <div class="case-history"><span>① 역사적 사실</span><p>크롬웰의 통치 기간 동안 그의 종교적 신념과 청교도적 가치는 그의 정책에 심대한 영향을 미쳤습니다. 이러한 종교적 통치는 초기에는 체제를 안정시키고 강화하는 데 기여했지만, 지나친 엄격함과 통제는 나중에 민중의 불만을 초래했습니다. 이 스킬은 단기적인 강화 효과와 장기적인 불리함을 통해 이런 이중적 효과를 나타내고자 합니다.</p></div>
+              <div class="case-game-effect"><span>② 게임 기술</span><p>궁극기를 발동하면 자신과 주변 아군이 일정 시간 강력한 효과를 받지만, 지속 시간이 끝나면 일정 시간 동안 아군이 받는 <b>치유 효과가 감소</b>합니다.</p></div>
+            </div>
+            <div class="case-link"><span>연결 논리</span><p>통치의 <b>단기적인 강화 효과와 장기적인 불리함</b>을 한 기술 안에 함께 넣어, 역사적 사실의 양면성을 게임 규칙으로 나타냈습니다.</p></div>
+          </article>
+        </div>
+
+        <div class="case-stat-bridge">
+          <div class="case-stat-icon">★</div>
+          <div><span>기술이 아니라 ‘능력치’로 만들 수도 있습니다.</span><b>예: 신형군과 군사 활동 → 군사지휘력 ★★★★★</b><p>중요한 것은 형식이 아니라 근거입니다. 같은 역사적 사실도 ‘기술’로 표현할 수도 있고 ‘능력치’로 표현할 수도 있습니다.</p></div>
         </div>
 
         <div class="case-judge-line">
           <div><span>GOOD BUILD</span><b>멋진 이름보다 ‘근거 있는 연결’이 더 중요합니다.</b></div>
-          <p>게임 효과만 적으면 끝이 아닙니다. <strong>어떤 역사적 사실 때문에 이런 효과를 만들었는지</strong> 설명할 수 있어야 합니다.</p>
+          <p>각 게임 요소 아래에서 <strong>“어떤 역사적 사실 때문에 이런 효과를 만들었는가?”</strong>를 자신의 말로 설명할 수 있다면 좋은 빌드입니다.</p>
         </div>
       </div>
     </div>`;
@@ -429,7 +470,7 @@
 
   function factInputs() {
     return state.eventStudy.facts.map((f, i) => `
-      <label class="compact-fact"><span><b>FACT ${i + 1}</b> · 게임 요소로 바꿀 역사적 사실</span>
+      <label class="compact-fact"><span><b>FACT ${i + 1}</b> · 게임 요소로 활용할 역사적 사실</span>
         <textarea data-fact="${i}" rows="3" data-field="fact-${i + 1}" placeholder="1~2문장으로 구체적으로 쓰세요. 예: 마리 앙투아네트는 구체제 왕실의 특권을 상징하는 인물로 비판받았다. 혁명 과정에서 왕실에 대한 불신이 커지는 배경과 연결할 수 있다.">${escapeHtml(f.text)}</textarea>
       </label>`).join("");
   }
@@ -438,7 +479,7 @@
     appEl.innerHTML = `<section>
       <div class="section-head game-heading">
         <div><div class="eyebrow">STEP 3 · HISTORY SOURCE</div><h2>인물보다 먼저,<br><span>사건을 잡으세요.</span></h2></div>
-        <p>여러 사건을 억지로 찾을 필요 없습니다. <b>이 인물과 가장 관련 있는 큰 사건 1개</b>를 중심으로 충분히 설명하고, 그 사건 안에서 게임 캐릭터의 재료가 될 역사적 사실 4개를 뽑습니다.</p>
+        <p>여러 사건을 억지로 찾을 필요 없습니다. <b>이 인물과 가장 관련 있는 큰 사건 1개</b>를 중심으로 충분히 설명하고, 그 사건 안에서 게임 요소로 활용할 역사적 사실 4개를 뽑습니다.</p>
       </div>
 
       <div class="event-card card">
@@ -457,7 +498,7 @@
       </div>
 
       <div class="fact-zone">
-        <div class="fact-zone-head"><div><div class="card-number">HISTORY FACT x4</div><h3>게임의 재료가 될 역사적 사실 4개</h3></div><span>각각 1~2문장, 최소 20자</span></div>
+        <div class="fact-zone-head"><div><div class="card-number">HISTORY FACT x4</div><h3>게임 요소로 활용할 역사적 사실 4개</h3></div><span>각각 1~2문장, 최소 20자</span></div>
         <div class="fact-grid">${factInputs()}</div>
         <label class="source-note">근거 메모 <span class="optional">선택</span>
           <input id="sourceNote" data-field="source-note" value="${escapeHtml(state.eventStudy.sourceNote)}" placeholder="예: 교과서 p.134 / 수업 활동지 2쪽">
@@ -506,7 +547,7 @@
         </div>
       </div>
 
-      <label>어떤 역사적 사실을 게임으로 바꿀까요?
+      <label>어떤 역사적 사실을 이 게임 요소에 활용할까요?
         <select data-element="${i}" data-key="factId"><option value="">선택하세요</option>${opts}</select>
       </label>
       ${factText ? `<div class="source-rune"><span>HISTORY SOURCE</span><p>${escapeHtml(factText)}</p></div>` : ""}
@@ -759,13 +800,25 @@
       <div class="final-stage-head"><div><div class="eyebrow gold">STEP 6 · FINAL CHECK</div><h2>MISSION LOADOUT<br><span>제출 준비 완료?</span></h2><p>게임의 출전 준비 화면처럼 마지막으로 장비를 점검하세요. 이 화면의 확인이 끝나면 선생님에게 최종 제출됩니다.</p></div><div class="ready-rank"><span>READY</span><b>10</b><small>POINT RUBRIC</small></div></div>
 
       <div class="final-stage-grid">
-        <div class="character-sheet final-character-card">
-          <div class="sheet-profile">
-            <div class="sheet-image">${localImageData ? `<img src="${localImageData}" alt="최종 캐릭터">` : `<div class="image-placeholder">NO IMAGE<br><small>이미지 미첨부</small></div>`}</div>
-            <div><span class="sheet-kicker">${escapeHtml(ACTIVITY.unitLabel)}</span><h3>${escapeHtml(state.selectedPerson)}</h3><p>${escapeHtml(state.className)}반 ${escapeHtml(state.studentNumber)}번 ${escapeHtml(state.studentName)}</p></div>
+        <div class="final-character-card final-loadout-card">
+          <div class="final-profile-row">
+            <div class="final-portrait">${localImageData ? `<img src="${localImageData}" alt="최종 캐릭터">` : `<div class="image-placeholder">NO IMAGE<br><small>이미지 미첨부</small></div>`}</div>
+            <div class="final-profile-copy">
+              <span class="sheet-kicker">${escapeHtml(ACTIVITY.unitLabel)}</span>
+              <div class="final-player-tag">PLAYER · ${escapeHtml(state.className)}-${escapeHtml(state.studentNumber)}</div>
+              <h3>${escapeHtml(state.selectedPerson)}</h3>
+              <p>${escapeHtml(state.className)}반 ${escapeHtml(state.studentNumber)}번 · ${escapeHtml(state.studentName)}</p>
+              <div class="final-event-chip"><small>MAIN EVENT</small><b>${escapeHtml(e.eventTitle)}</b></div>
+            </div>
           </div>
-          <div class="sheet-event"><small>MAIN EVENT</small><b>${escapeHtml(e.eventTitle)}</b><p>${escapeHtml(e.eventSummary)}</p></div>
-          <div class="sheet-build"><small>CHARACTER BUILD</small>${state.gameElements.map((g, i) => `<div><span>${i + 1}</span><b>[${g.kind === "skill" ? "기술" : "능력치"}] ${escapeHtml(g.name)}</b></div>`).join("")}</div>
+          <div class="final-event-card">
+            <div class="final-section-label"><span>HISTORY</span><b>대표 사건 설명</b></div>
+            <p>${escapeHtml(e.eventSummary)}</p>
+          </div>
+          <div class="final-build-card">
+            <div class="final-section-label"><span>BUILD</span><b>CHARACTER LOADOUT</b></div>
+            <div class="final-build-grid">${state.gameElements.map((g, i) => `<div class="final-build-item ${g.kind}"><span>${i + 1}</span><div><small>${g.kind === "skill" ? "SKILL" : "STAT"}</small><b>${escapeHtml(g.name)}</b></div></div>`).join("")}</div>
+          </div>
         </div>
         <div class="mission-check-panel"><div class="card-number">PRE-FLIGHT CHECK</div><h3>최종 점검</h3>${checklist.map((c,i)=>`<div class="mission-check"><span>${i+1}</span><div><b>${c[0]}</b><p>${c[1]}</p></div><em>CHECK</em></div>`).join("")}
           <div class="grading-notice"><b>🤖 AI 초벌 검토 안내</b><span>AI는 중학교 역사교사·역사교육 전문가의 기준을 바탕으로 선생님의 초벌 검토를 보조합니다. <strong>AI 점수가 그대로 성적이 되는 것은 아니며</strong>, 선생님이 직접 답안을 다시 확인한 뒤 최종 점수를 부여합니다.</span></div>

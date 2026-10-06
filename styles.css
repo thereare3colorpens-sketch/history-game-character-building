@@ -28,3 +28,205 @@
 .case-game-card{position:relative;overflow:hidden;border-radius:22px;padding:20px;background:radial-gradient(circle at 88% 5%,rgba(109,74,255,.32),transparent 30%),linear-gradient(145deg,#0c1321 0%,#121c31 58%,#0b1220 100%);color:#eef3ff;border:1px solid #34415d;box-shadow:0 22px 50px rgba(10,16,30,.28)}.case-game-card:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent 0 96%,rgba(255,255,255,.035) 96%),linear-gradient(0deg,transparent 0 96%,rgba(255,255,255,.028) 96%);background-size:30px 30px}.case-card-glow{position:absolute;width:240px;height:240px;right:-110px;top:-120px;border-radius:50%;background:radial-gradient(circle,rgba(34,211,238,.2),transparent 68%);pointer-events:none}.case-card-header{position:relative;display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:14px;align-items:center;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.12)}.case-rank{width:58px;height:58px;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(145deg,#6d4aff,#3e2a96);box-shadow:0 0 0 1px rgba(255,255,255,.14),0 8px 18px rgba(68,48,154,.45)}.case-rank small{font-size:8px;letter-spacing:.12em;color:#d9d1ff}.case-rank b{font-family:'DnfBitbeatV2','SUITE',sans-serif;font-size:28px;line-height:1;color:#fff}.case-title-block>span,.case-role>span,.case-event-band span,.case-judge-line span{font-size:9px;letter-spacing:.12em;color:#9aa9c1;font-weight:800}.case-title-block h3{margin:4px 0 3px;font-size:22px;line-height:1.15;letter-spacing:-.035em;color:#fff}.case-title-block p{margin:0;font-size:11px;line-height:1.45;color:#aab6ca}.case-role{text-align:right;min-width:120px}.case-role b,.case-role small{display:block}.case-role b{margin-top:4px;font-size:12px;color:#f6c453}.case-role small{margin-top:4px;font-size:10px;color:#aab6ca}.case-event-band{position:relative;margin-top:14px;padding:12px 13px;border-radius:13px;background:linear-gradient(90deg,rgba(109,74,255,.22),rgba(34,211,238,.08));border:1px solid rgba(132,118,212,.3);display:flex;justify-content:space-between;align-items:center;gap:12px}.case-event-band b{display:block;margin-top:3px;font-size:13px;color:#fff}.case-build-path{display:flex;align-items:center;gap:7px;white-space:nowrap}.case-build-path span{padding:5px 7px;border-radius:7px;background:rgba(255,255,255,.08);color:#dbe5f5}.case-build-path i{font-style:normal;color:#f6c453;font-weight:900}.case-skill-grid{position:relative;margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:9px}.case-skill{position:relative;border-radius:14px;padding:12px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.1);min-height:142px}.case-skill:before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:4px;background:#6d4aff}.case-skill.attack:before{background:#ef6a5b}.case-skill.defense:before{background:#22d3ee}.case-skill.ultimate:before{background:#f6c453}.case-skill-top{padding-left:7px}.case-skill-top span{display:block;font-size:8px;letter-spacing:.11em;color:#9aa9c1;font-weight:900}.case-skill-top b{display:block;margin-top:4px;font-size:14px;color:#fff}.case-effect{margin:8px 0 0;padding:7px 9px;border-radius:9px;background:rgba(0,0,0,.16);font-size:11px;line-height:1.45;color:#e8eef8}.case-basis{margin:7px 0 0;font-size:10.5px;line-height:1.5;color:#abb8cc}.case-basis b{color:#cfc6ff}.case-judge-line{position:relative;margin-top:12px;padding:12px 13px;border-radius:13px;background:#f6c453;color:#161d2c;display:grid;grid-template-columns:minmax(190px,.82fr) minmax(0,1.18fr);gap:15px;align-items:center}.case-judge-line span{color:#72520a}.case-judge-line b{display:block;margin-top:2px;font-size:12px}.case-judge-line p{margin:0;font-size:11px;line-height:1.5}.case-judge-line strong{color:#3f2a7e}
 @media (max-width:899px){.example-showcase-v2{grid-template-columns:1fr}.case-game-card{padding:17px}.case-card-header{grid-template-columns:56px minmax(0,1fr)}.case-role{grid-column:2;text-align:left;display:flex;gap:8px;align-items:center}.case-role small{margin:0}.case-event-band{align-items:flex-start;flex-direction:column}.case-judge-line{grid-template-columns:1fr}}
 @media (max-width:560px){.case-skill-grid{grid-template-columns:1fr}.case-title-block h3{font-size:19px}.case-card-header{gap:10px}.case-rank{width:52px;height:52px}.case-build-path{width:100%;justify-content:space-between}.case-judge-line{padding:11px}}
+
+
+/* ===== v4.2 polish: readability, detailed demo, final loadout, transitions ===== */
+html{scroll-behavior:smooth}
+.student-app{font-size:16px;background:
+  radial-gradient(circle at 8% 2%,rgba(109,74,255,.10),transparent 22%),
+  radial-gradient(circle at 92% 12%,rgba(34,211,238,.08),transparent 21%),
+  linear-gradient(180deg,#f2f4f9 0%,#edf1f7 100%);
+}
+.student-app .hero,.student-app .panel{
+  background:linear-gradient(145deg,rgba(255,255,255,.99),rgba(249,250,255,.985));
+  border-color:#d8ddea;
+  box-shadow:0 18px 48px rgba(15,23,42,.075);
+}
+.student-app .card{
+  background:linear-gradient(145deg,#fff 0%,#fbfbff 100%);
+  box-shadow:0 10px 28px rgba(15,23,42,.045);
+}
+.student-app .section-head>p{font-size:16px;line-height:1.78}
+.student-app .lead{font-size:17px;line-height:1.78}
+.student-app label{font-size:15px;line-height:1.45}
+.student-app input,.student-app textarea,.student-app select{font-size:16px;line-height:1.62}
+.student-app .hint{font-size:14px;line-height:1.7}
+.student-app .mini-guide{font-size:11px;padding:4px 7px}
+.student-app .writing-guide{font-size:12.5px}
+.student-app .compact-fact>span{font-size:13px;line-height:1.45}
+.student-app .source-rune p{font-size:13.5px;line-height:1.65}
+.student-app .rule-card b{font-size:14px}
+.student-app .rule-card span{font-size:13px;line-height:1.58}
+.student-app .mission-steps b{font-size:15px}
+.student-app .mission-steps span{font-size:13px;line-height:1.6}
+.student-app .privacy-note{font-size:14px;line-height:1.65}
+
+/* Scene transition */
+.student-app #app>section,
+.student-app #app>.hero,
+.student-app #app>.final-stage{
+  animation:missionSceneIn .42s cubic-bezier(.2,.72,.28,1) both;
+  transform-origin:50% 12%;
+}
+.student-app #app>.bottom-nav{animation:missionNavIn .38s .06s cubic-bezier(.2,.72,.28,1) both}
+@keyframes missionSceneIn{
+  from{opacity:0;transform:translateY(13px) scale(.994);filter:blur(1.5px)}
+  to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+}
+@keyframes missionNavIn{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .student-app #app>section,.student-app #app>.hero,.student-app #app>.final-stage,.student-app #app>.bottom-nav{animation:none}
+}
+
+/* Example: full source -> interpretation -> game conversion */
+.example-showcase-v3{display:grid;grid-template-columns:1fr;gap:22px;align-items:start}
+.example-showcase-v3 .example-copy{max-width:920px}
+.example-showcase-v3 .example-copy h2{font-size:clamp(34px,4vw,51px);line-height:1.05;margin:12px 0}
+.example-showcase-v3 .example-copy h2 span{color:var(--violet)}
+.example-showcase-v3 .example-copy>p{font-size:17px;line-height:1.82;color:#4b566b;margin:0}
+.example-showcase-v3 .demo-tip{padding:16px 18px}
+.example-showcase-v3 .demo-tip b{font-size:13px}
+.example-showcase-v3 .demo-tip span{font-size:15px;line-height:1.65}
+.demo-reading-guide{margin-top:11px;padding:13px 16px;border-radius:14px;border:1px solid #d9d0ff;background:linear-gradient(135deg,#faf8ff,#f3fbff);color:#414b61}
+.demo-reading-guide b,.demo-reading-guide span{display:block}
+.demo-reading-guide b{font-size:14px;color:#5c3bd6}
+.demo-reading-guide span{font-size:14px;line-height:1.65;margin-top:4px}
+
+.case-game-card-detailed{
+  padding:24px;
+  background:
+    radial-gradient(circle at 88% 4%,rgba(124,58,237,.36),transparent 28%),
+    radial-gradient(circle at 6% 92%,rgba(14,165,233,.16),transparent 26%),
+    linear-gradient(145deg,#09111f 0%,#14203a 55%,#0c1526 100%);
+  border-color:#465474;
+}
+.case-game-card-detailed .case-card-header{padding-bottom:18px}
+.case-game-card-detailed .case-title-block h3{font-size:27px}
+.case-game-card-detailed .case-title-block p{font-size:13.5px;line-height:1.55}
+.case-game-card-detailed .case-role b{font-size:13.5px}
+.case-game-card-detailed .case-role small{font-size:11.5px}
+.case-event-band-rich{padding:16px 17px;align-items:flex-start}
+.case-event-band-rich>div:first-child{min-width:0}
+.case-event-band-rich b{font-size:16px}
+.case-event-band-rich p{margin:7px 0 0;max-width:820px;color:#d2dced;font-size:14px;line-height:1.72}
+.case-event-band-rich .case-build-path{align-self:center}
+
+.case-skill-list{position:relative;display:grid;grid-template-columns:1fr;gap:13px;margin-top:14px}
+.case-skill-detail{
+  position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.12);border-radius:17px;
+  padding:16px 17px 15px 20px;background:linear-gradient(135deg,rgba(255,255,255,.075),rgba(255,255,255,.035));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035);
+}
+.case-skill-detail:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#7757ff}
+.case-skill-detail.attack:before{background:#ef6a5b}
+.case-skill-detail.defense:before{background:#22d3ee}
+.case-skill-detail.economy:before{background:#65d18a}
+.case-skill-detail.ultimate:before{background:#f6c453}
+.case-skill-detail .case-skill-top{padding:0 0 10px;border-bottom:1px solid rgba(255,255,255,.09)}
+.case-skill-detail .case-skill-top span{font-size:10px;color:#aebbd0}
+.case-skill-detail .case-skill-top b{font-size:18px;margin-top:4px}
+.case-convert-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(250px,.65fr);gap:12px;margin-top:12px}
+.case-history,.case-game-effect{border-radius:12px;padding:12px 13px;background:rgba(3,9,18,.28)}
+.case-history span,.case-game-effect span,.case-link span{
+  display:block;font-family:'DnfBitbeatV2','SUITE',sans-serif;font-size:10.5px;letter-spacing:.05em;color:#b9aaff
+}
+.case-game-effect span{color:#7ee2f3}
+.case-history p,.case-game-effect p{margin:6px 0 0;font-size:14px;line-height:1.72;color:#e6edf8}
+.case-game-effect p b{color:#fff}
+.case-link{margin-top:10px;padding:11px 13px;border-radius:12px;background:linear-gradient(90deg,rgba(109,74,255,.14),rgba(34,211,238,.07));border:1px solid rgba(142,130,221,.2)}
+.case-link span{color:#f6c453}
+.case-link p{margin:5px 0 0;font-size:13.5px;line-height:1.68;color:#dce5f2}
+.case-link b{color:#fff}
+.case-stat-bridge{display:grid;grid-template-columns:48px 1fr;gap:13px;align-items:center;margin-top:14px;padding:14px 16px;border-radius:15px;background:linear-gradient(135deg,rgba(34,211,238,.12),rgba(109,74,255,.15));border:1px solid rgba(125,211,252,.22)}
+.case-stat-icon{width:44px;height:44px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(145deg,#22d3ee,#6d4aff);font-size:23px;color:#fff;box-shadow:0 8px 20px rgba(34,211,238,.15)}
+.case-stat-bridge span,.case-stat-bridge b,.case-stat-bridge p{display:block}
+.case-stat-bridge span{font-size:12px;color:#aebbd0}
+.case-stat-bridge b{font-size:15px;color:#fff;margin-top:3px}
+.case-stat-bridge p{font-size:13px;line-height:1.58;color:#d4deec;margin:5px 0 0}
+.case-game-card-detailed .case-judge-line{padding:14px 16px}
+.case-game-card-detailed .case-judge-line b{font-size:14px}
+.case-game-card-detailed .case-judge-line p{font-size:13px;line-height:1.6}
+
+/* Final loadout: robust portrait sizing + richer card */
+.final-stage{
+  background:
+    radial-gradient(circle at 78% 10%,rgba(118,71,255,.43),transparent 25%),
+    radial-gradient(circle at 4% 84%,rgba(14,165,233,.22),transparent 28%),
+    linear-gradient(145deg,#060b15 0%,#111a31 52%,#1a2545 100%);
+}
+.final-stage-grid{grid-template-columns:minmax(0,1.32fr) minmax(350px,.68fr);gap:18px}
+.final-loadout-card{
+  min-width:0;overflow:hidden;padding:14px;
+  background:linear-gradient(145deg,rgba(255,255,255,.985),rgba(245,247,255,.97));
+  border:1px solid rgba(255,255,255,.75);
+  box-shadow:0 20px 45px rgba(2,7,18,.24);
+}
+.final-profile-row{display:grid;grid-template-columns:minmax(180px,225px) minmax(0,1fr);gap:17px;align-items:stretch}
+.final-portrait{
+  width:100%;aspect-ratio:4/5;min-height:0;border-radius:17px;overflow:hidden;display:grid;place-items:center;
+  background:radial-gradient(circle at 50% 25%,#344663,#172238 65%,#0c1321);
+  border:1px solid #33415a;box-shadow:inset 0 0 35px rgba(0,0,0,.2);
+}
+.final-portrait img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 18%}
+.final-profile-copy{
+  min-width:0;border-radius:17px;padding:20px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(109,74,255,.28),transparent 33%),
+    linear-gradient(145deg,#101827,#202d4a);
+  color:#fff;display:flex;flex-direction:column;justify-content:center;
+}
+.final-profile-copy .sheet-kicker{font-size:12px}
+.final-player-tag{margin-top:12px;font-size:10.5px;letter-spacing:.12em;color:#93a5bf;font-weight:800}
+.final-profile-copy h3{font-size:clamp(31px,3.2vw,44px);line-height:1.05;margin:7px 0 8px;word-break:keep-all}
+.final-profile-copy>p{font-size:14px;color:#cbd5e1;margin:0}
+.final-event-chip{margin-top:18px;padding:11px 13px;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1)}
+.final-event-chip small,.final-event-chip b{display:block}
+.final-event-chip small{font-family:'DnfBitbeatV2';font-size:9px;color:#f6c453}
+.final-event-chip b{margin-top:4px;font-size:16px;color:#fff}
+.final-event-card,.final-build-card{margin-top:12px;border:1px solid #dce1ec;border-radius:16px;padding:15px 16px;background:#fff}
+.final-section-label{display:flex;align-items:center;gap:8px}
+.final-section-label span{font-family:'DnfBitbeatV2';font-size:10px;color:#6846df;padding:5px 7px;border-radius:7px;background:#eeeaff}
+.final-section-label b{font-size:14px;color:#263147}
+.final-event-card>p{font-size:14px;line-height:1.75;color:#596579;margin:9px 0 0;max-height:170px;overflow:auto;padding-right:5px}
+.final-build-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.final-build-item{display:grid;grid-template-columns:32px 1fr;gap:9px;align-items:center;padding:10px 11px;border-radius:12px;background:linear-gradient(135deg,#f7f8fb,#f0f2f8);border:1px solid #e3e7ef;min-width:0}
+.final-build-item>span{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:#111827;color:#fff;font-family:'DnfBitbeatV2';font-size:11px}
+.final-build-item.stat>span{background:linear-gradient(145deg,#0891b2,#6d4aff)}
+.final-build-item small,.final-build-item b{display:block}
+.final-build-item small{font-size:9px;letter-spacing:.08em;color:#7b8799;font-weight:900}
+.final-build-item b{font-size:13px;color:#202a3b;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mission-check-panel{background:linear-gradient(160deg,rgba(7,12,23,.83),rgba(13,20,39,.76));box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 18px 40px rgba(3,7,18,.16)}
+.mission-check-panel h3{font-size:27px}
+.mission-check p{font-size:13px;line-height:1.55}
+.grading-notice span{font-size:13px;line-height:1.65}
+
+@media (min-width:900px) and (max-width:1400px){
+  .case-game-card-detailed{padding:20px}
+  .case-convert-grid{grid-template-columns:minmax(0,1.25fr) minmax(220px,.75fr)}
+  .final-stage-grid{grid-template-columns:minmax(0,1.18fr) minmax(340px,.82fr)}
+  .final-profile-row{grid-template-columns:minmax(160px,195px) minmax(0,1fr)}
+  .final-event-card>p{max-height:145px}
+}
+@media (max-width:899px){
+  .case-convert-grid{grid-template-columns:1fr}
+  .case-event-band-rich .case-build-path{align-self:flex-start}
+  .final-stage-grid{grid-template-columns:1fr}
+  .final-profile-row{grid-template-columns:190px minmax(0,1fr)}
+  .final-event-card>p{max-height:none}
+}
+@media (max-width:699px){
+  .example-showcase-v3 .example-copy>p{font-size:15.5px}
+  .case-game-card-detailed{padding:15px}
+  .case-title-block h3{font-size:22px}
+  .case-history p,.case-game-effect p{font-size:13.5px}
+  .case-stat-bridge{grid-template-columns:1fr}
+  .case-stat-icon{display:none}
+  .final-profile-row{grid-template-columns:1fr}
+  .final-portrait{max-width:290px;margin:0 auto}
+  .final-profile-copy{padding:17px}
+  .final-build-grid{grid-template-columns:1fr}
+}
