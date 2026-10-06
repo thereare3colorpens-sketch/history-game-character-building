@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 520" role="img" aria-labelledby="t d">
+  <title id="t">History character game card illustration</title>
+  <desc id="d">A stylized historical game character card with compass and scroll motifs.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#14233d"/><stop offset="1" stop-color="#24184a"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe28a"/><stop offset="1" stop-color="#d89a2a"/></linearGradient>
+    <linearGradient id="violet" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#5b21b6"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="0" dy="16" stdDeviation="16" flood-color="#000" flood-opacity=".25"/></filter>
+  </defs>
+  <rect width="620" height="520" rx="46" fill="url(#bg)"/>
+  <g opacity=".14" stroke="#fff" fill="none">
+    <path d="M34 90h120M466 424h120M510 44v120M74 354v120" stroke-width="2"/>
+    <circle cx="515" cy="114" r="72"/><circle cx="515" cy="114" r="52"/><path d="M515 43v142M444 114h142"/>
+  </g>
+  <g filter="url(#shadow)">
+    <path d="M144 56h285l48 47v337l-45 38H144l-46-42V100z" fill="#101827" stroke="url(#gold)" stroke-width="4"/>
+    <path d="M153 72h264l43 42v308l-36 37H151l-36-34V109z" fill="none" stroke="#6f5c34" stroke-width="1.5"/>
+  </g>
+  <path d="M184 372c18-61 46-96 91-111-17-15-28-39-28-65 0-49 36-86 82-86s82 37 82 86c0 28-12 53-31 69 44 18 70 54 83 107-64 45-211 45-279 0z" fill="#d6d7db"/>
+  <path d="M242 196c0-53 35-93 87-93 33 0 65 18 80 47-17-9-37-14-58-14-44 0-80 21-109 60z" fill="#252d3b"/>
+  <path d="M275 194c13-18 35-27 61-27 25 0 47 8 63 25-3 55-31 92-66 92-33 0-57-36-58-90z" fill="#e4c3aa"/>
+  <path d="M268 323c17 24 38 38 66 38 26 0 49-12 68-37l32 56c-65 34-141 35-201 1z" fill="url(#violet)"/>
+  <path d="M245 180c18-39 46-59 85-59 32 0 61 14 80 43-38-17-95-4-165 16z" fill="#1f2937"/>
+  <path d="M274 213c12 0 18 7 18 13s-8 10-18 10M372 213c-12 0-18 7-18 13s8 10 18 10" stroke="#51453f" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M312 257c15 9 29 9 44 0" stroke="#9b6651" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <g transform="translate(122 386)"><rect width="380" height="70" rx="18" fill="#0a0f19" stroke="#3d4e6a"/><text x="24" y="28" fill="#f7c75d" font-family="Arial,sans-serif" font-size="13" font-weight="700">HISTORY CLASS</text><text x="24" y="52" fill="#fff" font-family="Arial,sans-serif" font-size="23" font-weight="800">CHARACTER BUILD</text><rect x="320" y="17" width="40" height="40" rx="10" fill="url(#gold)"/><path d="M340 24v26M327 37h26" stroke="#2a1e08" stroke-width="4"/></g>
+  <g transform="translate(43 38)"><path d="M25 0l8 17 19 3-14 13 4 19-17-9-17 9 4-19L-2 20l19-3z" fill="url(#gold)"/><text x="67" y="35" fill="#fff" font-family="Arial,sans-serif" font-weight="700" font-size="16">QUEST CARD</text></g>
+</svg>
