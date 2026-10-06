@@ -4,6 +4,10 @@
   const PEOPLE = CFG.people || [];
   const ACTIVITY = CFG.activity || { academicYear: "2026", id: "activity", title: "역사 캐릭터 빌드", unitLabel: "역사", shortDescription: "" };
   const IMAGE_TOOLS = CFG.imageTools || [];
+  const PORTRAIT_PROMPTS = CFG.portraitPrompts || [];
+  const TEST_CFG = CFG.testMode || {};
+  const params = new URLSearchParams(location.search);
+  const IS_TEST_SESSION = Boolean(TEST_CFG.enabled && params.get(TEST_CFG.queryKey || "test") === String(TEST_CFG.queryValue || "1"));
 
   const $ = (s) => document.querySelector(s);
   const appEl = $("#app");
@@ -17,6 +21,7 @@
   const LOCAL_IMAGE_PREFIX = "history-character-v3-image:";
   const DEVICE_UID_KEY = "history-character-device-id";
   const labels = ["미션", "학생 정보", "사건 정리", "캐릭터", "초상화", "제출"];
+  let introTab = "guide";
 
   let uid = "";
   let submissionId = "";
@@ -31,7 +36,7 @@
   let toastTimer = null;
   let localImageData = "";
 
-  if (activityMiniTitle) activityMiniTitle.textContent = `${ACTIVITY.academicYear} · ${ACTIVITY.unitLabel || ACTIVITY.title}`;
+  if (activityMiniTitle) activityMiniTitle.textContent = `${ACTIVITY.academicYear} · ${ACTIVITY.schoolGrade || "-"}학년 · ${ACTIVITY.unitLabel || ACTIVITY.title}`;
 
   function id(prefix = "id") {
     if (window.crypto?.randomUUID) return `${prefix}-${crypto.randomUUID()}`;
@@ -60,7 +65,8 @@
   }
 
   function makeSubmissionId(ownerUid) {
-    return `${safeKey(ACTIVITY.academicYear)}__${safeKey(ACTIVITY.id)}__${ownerUid}`;
+    const testSuffix = IS_TEST_SESSION ? "__TEST" : "";
+    return `${safeKey(ACTIVITY.academicYear)}__G${safeKey(ACTIVITY.schoolGrade || "NA")}__${safeKey(ACTIVITY.id)}__${ownerUid}${testSuffix}`;
   }
 
   function getDeviceUid() {
@@ -91,9 +97,15 @@
       ownerUid,
       submissionId: makeSubmissionId(ownerUid),
       academicYear: String(ACTIVITY.academicYear || ""),
+      schoolGrade: String(ACTIVITY.schoolGrade || ""),
+      isTest: IS_TEST_SESSION,
       activityId: String(ACTIVITY.id || ""),
       activityTitle: String(ACTIVITY.title || ""),
       unitLabel: String(ACTIVITY.unitLabel || ""),
+      referenceGuide: String(ACTIVITY.referenceGuide || ""),
+      pedagogyGuide: String(ACTIVITY.pedagogyGuide || ""),
+      rubricVersion: "history-character-10pt-v1",
+      appVersion: "4.0",
       className: "",
       studentNumber: "",
       studentName: "",
@@ -123,6 +135,8 @@
     s.ownerUid = ownerUid;
     s.submissionId = makeSubmissionId(ownerUid);
     s.academicYear = String(ACTIVITY.academicYear || s.academicYear || "");
+    s.schoolGrade = String(ACTIVITY.schoolGrade || s.schoolGrade || "");
+    s.isTest = IS_TEST_SESSION || Boolean(s.isTest);
     s.activityId = String(ACTIVITY.id || s.activityId || "");
     s.activityTitle = String(ACTIVITY.title || s.activityTitle || "");
     s.unitLabel = String(ACTIVITY.unitLabel || s.unitLabel || "");
@@ -238,7 +252,7 @@
   }
 
   function navHtml({ next = true, nextLabel = "다음 퀘스트 →" } = {}) {
-    const prevDisabled = state.step === 1 || (state.textLocked && state.step === 5);
+    const prevDisabled = state.step === 1 || (!IS_TEST_SESSION && state.textLocked && state.step === 5);
     return `<nav class="bottom-nav">
       <button id="prevBtn" class="secondary touch" ${prevDisabled ? "disabled" : ""}>← 이전</button>
       ${next ? `<button id="nextBtn" class="primary touch">${nextLabel}</button>` : ""}
@@ -247,7 +261,7 @@
 
   function bindNav(nextHandler) {
     $("#prevBtn")?.addEventListener("click", () => {
-      if (state.textLocked && state.step === 5) return;
+      if (!IS_TEST_SESSION && state.textLocked && state.step === 5) return;
       state.step = Math.max(1, state.step - 1);
       queueSave();
       renderApp();
@@ -281,51 +295,104 @@
   }
 
   function renderIntro() {
-    appEl.innerHTML = `<section class="hero intro-hero game-surface">
-      <div class="intro-grid">
+    const guide = `<div class="intro-grid">
         <div>
-          <div class="quest-badge">MAIN QUEST · ${escapeHtml(ACTIVITY.academicYear)}</div>
+          <div class="quest-badge">MAIN QUEST · ${escapeHtml(ACTIVITY.academicYear)} · ${escapeHtml(ACTIVITY.schoolGrade || "-")}학년</div>
           <h1>역사를 배우고,<br><span>캐릭터를 빌드하라.</span></h1>
-          <p class="hero-copy">이번 활동은 <b>인물의 전기를 외우는 과제</b>가 아닙니다. 한 역사적 인물을 입구로 삼아 그 인물과 연결된 <b>핵심 사건을 설명</b>하고, 배운 역사적 사실을 게임 캐릭터의 <b>기술·능력치</b>로 바꾸는 활동입니다.</p>
-          <div class="hero-tags"><span>#${escapeHtml(ACTIVITY.unitLabel)}</span><span>#역사적사고</span><span>#게임캐릭터</span><span>#수행평가10점</span></div>
+          <p class="hero-copy">이번 수행평가는 <b>인물의 전기를 많이 외우는 활동</b>이 아닙니다. 한 인물을 입구로 삼아 그 인물과 연결된 <b>큰 역사 사건 1개를 제대로 설명</b>하고, 사건 속 사실을 골라 게임 캐릭터의 <b>기술·능력치</b>로 바꾸는 미션입니다.</p>
+          <div class="hero-tags"><span>#${escapeHtml(ACTIVITY.unitLabel)}</span><span>#사건중심역사</span><span>#게임캐릭터</span><span>#수행평가10점</span></div>
         </div>
         <div class="hero-art-wrap"><img src="./assets/hero-quest.svg" class="hero-art" alt="게임 캐릭터 카드 일러스트"></div>
       </div>
 
       <div class="mission-board">
-        <div class="mission-title"><span>01</span><div><b>이번 미션에서 해야 할 일</b><small>결과보다 ‘역사적 근거 → 게임 표현’의 연결이 중요합니다.</small></div></div>
+        <div class="mission-title"><span>01</span><div><b>퀘스트 진행 방법</b><small>‘역사적 사실 → 게임 표현 → 왜 그렇게 만들었는가’가 핵심입니다.</small></div></div>
         <div class="mission-steps">
-          <div><i>①</i><b>대표 사건 1개</b><span>선택한 인물과 연결된 가장 중요한 사건을 골라 2~3문장으로 정리</span></div>
-          <div><i>②</i><b>역사적 사실 4개</b><span>그 사건 안에서 캐릭터 소재로 쓸 수 있는 사실을 한 문장씩 정리</span></div>
-          <div><i>③</i><b>게임 요소 4개 이상</b><span>각 사실을 기술 또는 능력치로 자유롭게 변환하고 이유를 설명</span></div>
-          <div><i>④</i><b>게임 캐릭터 초상화</b><span>글을 확정한 뒤에만 외부 AI 이미지 도구 사용 가능</span></div>
+          <div><i>①</i><b>대표 사건 1개</b><span>선택한 인물과 연결된 가장 중요한 사건을 충분한 문장으로 설명합니다.</span></div>
+          <div><i>②</i><b>역사적 사실 4개</b><span>대표 사건 안에서 게임 캐릭터의 재료로 쓸 사실을 4개 고릅니다.</span></div>
+          <div><i>③</i><b>게임 요소 4개 이상</b><span>각 사실을 기술 또는 능력치로 자유롭게 바꾸고 연결 이유를 씁니다.</span></div>
+          <div><i>④</i><b>캐릭터 초상화</b><span>역사 글을 확정한 뒤에만 AI 이미지 도구를 사용해 초상화를 만듭니다.</span></div>
         </div>
       </div>
 
-      <div class="example-chain">
-        <div class="example-label">EXAMPLE</div>
-        <div class="chain-node"><small>인물</small><b>콜럼버스</b></div><span class="chain-arrow">→</span>
-        <div class="chain-node"><small>대표 사건</small><b>대항해시대</b></div><span class="chain-arrow">→</span>
-        <div class="chain-node"><small>역사적 사실</small><b>서쪽으로 대서양을 횡단</b></div><span class="chain-arrow">→</span>
-        <div class="chain-node accent"><small>게임 표현</small><b>기술 ‘서쪽 항로’</b></div>
-      </div>
-
       <div class="score-board">
-        <div class="score-title"><span>02</span><div><b>채점 기준 · 총 10점</b><small>그림 실력은 역사 점수에 넣지 않습니다.</small></div></div>
+        <div class="score-title"><span>02</span><div><b>채점 기준 · 총 10점</b><small>게임을 잘하거나 그림을 잘 그리는 것이 점수의 핵심은 아닙니다.</small></div></div>
         <div class="score-row"><b>역사 사건·사실의 정확성</b><div class="score-bar"><span style="width:40%"></span></div><strong>4점</strong></div>
         <div class="score-row"><b>역사 사실 ↔ 게임 요소 연결</b><div class="score-bar"><span style="width:30%"></span></div><strong>3점</strong></div>
         <div class="score-row"><b>역사적 해석의 타당성·균형</b><div class="score-bar"><span style="width:20%"></span></div><strong>2점</strong></div>
         <div class="score-row"><b>설명의 완성도·명료성</b><div class="score-bar"><span style="width:10%"></span></div><strong>1점</strong></div>
+        <div class="ai-score-notice"><b>AI는 선생님의 초벌 검토를 돕는 보조 도구입니다.</b><span>AI가 제시한 점수와 피드백은 그대로 성적에 반영되지 않을 수 있으며, 최종 점수는 선생님이 제출물을 직접 확인한 뒤 확정합니다.</span></div>
       </div>
 
       <div class="rule-grid">
-        <div class="rule-card ai-off"><div class="rule-icon">AI</div><b>STEP 1~4 · AI 사용 금지</b><span>역사 내용과 게임 요소는 자신의 생각으로 직접 작성합니다.</span></div>
-        <div class="rule-card ai-on"><div class="rule-icon">IMG</div><b>STEP 5 · 이미지 AI 허용</b><span>글을 잠근 뒤 초상화 제작에만 외부 AI 도구를 사용할 수 있습니다.</span></div>
-        <div class="rule-card"><div class="rule-icon">SAVE</div><b>자동 저장</b><span>입력할 때마다 이 기기와 서버에 자동 저장됩니다.</span></div>
-        <div class="rule-card"><div class="rule-icon">LOG</div><b>과정 기록</b><span>STEP 1~4의 화면 이탈·붙여넣기 기록은 교사의 확인 자료로 남습니다.</span></div>
+        <div class="rule-card ai-off"><div class="rule-icon">AI</div><b>글쓰기 단계 · 생성형 AI 금지</b><span>학생 정보·사건 정리·게임 빌드는 자신의 생각으로 직접 작성합니다.</span></div>
+        <div class="rule-card ai-on"><div class="rule-icon">IMG</div><b>초상화 단계 · 이미지 AI 허용</b><span>글을 확정한 다음 역사 인물 사진을 게임 캐릭터 스타일로 바꾸는 용도만 허용합니다.</span></div>
+        <div class="rule-card"><div class="rule-icon">SAVE</div><b>자동 저장</b><span>작성 내용은 기기와 Firebase에 자동 저장됩니다. 튕겨도 같은 기기에서 이어 쓸 수 있습니다.</span></div>
+        <div class="rule-card"><div class="rule-icon">LOCK</div><b>복사·붙여넣기 차단</b><span>글쓰기 단계에서는 복사·붙여넣기·잘라내기가 차단됩니다. 화면 이탈도 과정 기록으로 남습니다.</span></div>
       </div>
-      <div class="privacy-note"><b>화면을 벗어났다고 바로 감점하지 않습니다.</b> 오류·실수도 있을 수 있으므로 기록은 필요할 때 작성 과정을 확인하는 참고자료로만 사용합니다.</div>
+      <div class="privacy-note"><b>과정 기록만으로 자동 감점하지 않습니다.</b> 기기 오류나 실수도 있을 수 있으므로 화면 이탈 기록은 필요한 경우 작성 과정을 확인하는 참고자료로만 사용합니다.</div>`;
+
+    const example = `<div class="example-showcase example-showcase-v2">
+      <div class="example-copy">
+        <div class="quest-badge">TEACHER DEMO · SAMPLE BUILD</div>
+        <h2>역사적 사실이<br><span>게임 시스템으로 바뀌는 과정</span></h2>
+        <p>완성본을 그대로 따라 쓰는 것이 아니라, <b>사건 속 사실을 어떤 게임 표현으로 바꿀 수 있는지</b> 보는 시범 자료입니다. 같은 인물을 골라도 어떤 사실을 선택하고 어떻게 해석하느냐에 따라 전혀 다른 캐릭터가 나올 수 있습니다.</p>
+        <div class="demo-tip demo-tip-strong"><b>핵심 공식</b><span>역사적 사실 → 그 사실의 의미를 해석 → 기술 또는 능력치로 표현 → 왜 그렇게 만들었는지 설명</span></div>
+      </div>
+
+      <div class="case-game-card" aria-label="올리버 크롬웰 교사 시범 게임 빌드">
+        <div class="case-card-glow"></div>
+        <div class="case-card-header">
+          <div class="case-rank"><small>DEMO</small><b>S</b></div>
+          <div class="case-title-block">
+            <span>HISTORICAL CHARACTER BUILD</span>
+            <h3>철의 신념가, 올리버 크롬웰</h3>
+            <p>청교도 혁명과 공화정을 게임 캐릭터의 능력으로 재해석한 시범 빌드</p>
+          </div>
+          <div class="case-role"><span>ROLE</span><b>COMMANDER</b><small>군사 지도자 · 호국경</small></div>
+        </div>
+
+        <div class="case-event-band">
+          <div><span>MAIN EVENT</span><b>청교도 혁명 → 공화정</b></div>
+          <div class="case-build-path"><span>FACT</span><i>→</i><span>MEANING</span><i>→</i><span>GAME</span></div>
+        </div>
+
+        <div class="case-skill-grid">
+          <article class="case-skill passive">
+            <div class="case-skill-top"><span>PASSIVE</span><b>신형군의 충성</b></div>
+            <p class="case-effect">근처 아군의 방어력을 높인다.</p>
+            <p class="case-basis"><b>역사 연결</b> 신형군과 군사 조직에 대한 영향, 병사들과의 강한 결속을 ‘아군 강화’로 표현.</p>
+          </article>
+          <article class="case-skill attack">
+            <div class="case-skill-top"><span>SKILL</span><b>철의 타격</b></div>
+            <p class="case-effect">기병이 돌진해 피해를 주고 적을 잠시 멈춘다.</p>
+            <p class="case-basis"><b>역사 연결</b> 빠르고 강한 기병 중심 전투를 ‘돌진 + 기절’ 효과로 변환.</p>
+          </article>
+          <article class="case-skill defense">
+            <div class="case-skill-top"><span>SKILL</span><b>공화국의 권위</b></div>
+            <p class="case-effect">자신에게 보호막을 부여하고 방해 효과를 줄인다.</p>
+            <p class="case-basis"><b>역사 연결</b> 호국경으로서 행사한 강한 정치적 권위를 ‘방어 능력’으로 표현.</p>
+          </article>
+          <article class="case-skill ultimate">
+            <div class="case-skill-top"><span>ULTIMATE</span><b>신앙의 굴레</b></div>
+            <p class="case-effect">잠시 강력해지지만 효과가 끝난 뒤 불이익을 받는다.</p>
+            <p class="case-basis"><b>역사 연결</b> 청교도적 통치가 체제를 강화하는 한편 민중의 불만도 낳았다는 양면성을 ‘강화 후 페널티’로 표현.</p>
+          </article>
+        </div>
+
+        <div class="case-judge-line">
+          <div><span>GOOD BUILD</span><b>멋진 이름보다 ‘근거 있는 연결’이 더 중요합니다.</b></div>
+          <p>게임 효과만 적으면 끝이 아닙니다. <strong>어떤 역사적 사실 때문에 이런 효과를 만들었는지</strong> 설명할 수 있어야 합니다.</p>
+        </div>
+      </div>
+    </div>`;
+
+    appEl.innerHTML = `<section class="hero intro-hero game-surface">
+      <div class="intro-tabs"><button id="guideTab" class="${introTab === "guide" ? "active" : ""}">🎮 활동 안내</button><button id="exampleTab" class="${introTab === "example" ? "active" : ""}">🧩 사례 보기</button></div>
+      ${introTab === "guide" ? guide : example}
     </section>${navHtml({ nextLabel: "캐릭터 생성 시작 →" })}`;
+    $("#guideTab")?.addEventListener("click", () => { introTab = "guide"; renderIntro(); });
+    $("#exampleTab")?.addEventListener("click", () => { introTab = "example"; renderIntro(); });
     bindNav(() => { state.step = 2; queueSave(); renderApp(); window.scrollTo(0, 0); });
   }
 
@@ -343,7 +410,8 @@
         <input id="selectedPerson" list="peopleList" data-field="selectedPerson" value="${escapeHtml(state.selectedPerson)}" placeholder="예: 마리 앙투아네트">
         <datalist id="peopleList">${PEOPLE.map(p => `<option value="${escapeHtml(p)}"></option>`).join("")}</datalist>
       </label>
-      <div class="activity-chip"><span>현재 활동</span><b>${escapeHtml(ACTIVITY.academicYear)} · ${escapeHtml(ACTIVITY.title)}</b></div>
+      <div class="activity-chip"><span>현재 활동</span><b>${escapeHtml(ACTIVITY.academicYear)}학년도 · ${escapeHtml(ACTIVITY.schoolGrade || "-")}학년 · ${escapeHtml(ACTIVITY.title)}</b></div>
+      ${IS_TEST_SESSION ? `<div class="test-mode-card"><b>🧪 교사용 TEST MODE</b><span>이 주소에서는 글잠금과 최종제출에 묶이지 않고 앞뒤 단계로 자유롭게 이동할 수 있습니다.</span></div>` : ""}
       <p class="hint">글을 잠그기 전까지는 이전/다음 버튼으로 돌아와 수정할 수 있습니다. 같은 디벗에서는 새로고침하거나 홈 화면에 다녀와도 작성 내용이 자동 저장됩니다.</p>
     </section>${navHtml()}`;
 
@@ -362,7 +430,7 @@
   function factInputs() {
     return state.eventStudy.facts.map((f, i) => `
       <label class="compact-fact"><span><b>FACT ${i + 1}</b> · 게임 요소로 바꿀 역사적 사실</span>
-        <textarea data-fact="${i}" rows="2" data-field="fact-${i + 1}" placeholder="한 문장으로 쓰세요. 예: 마리 앙투아네트는 구체제 왕실의 사치와 특권을 상징하는 인물로 비판받았다.">${escapeHtml(f.text)}</textarea>
+        <textarea data-fact="${i}" rows="3" data-field="fact-${i + 1}" placeholder="1~2문장으로 구체적으로 쓰세요. 예: 마리 앙투아네트는 구체제 왕실의 특권을 상징하는 인물로 비판받았다. 혁명 과정에서 왕실에 대한 불신이 커지는 배경과 연결할 수 있다.">${escapeHtml(f.text)}</textarea>
       </label>`).join("");
   }
 
@@ -370,7 +438,7 @@
     appEl.innerHTML = `<section>
       <div class="section-head game-heading">
         <div><div class="eyebrow">STEP 3 · HISTORY SOURCE</div><h2>인물보다 먼저,<br><span>사건을 잡으세요.</span></h2></div>
-        <p>여러 사건을 억지로 찾을 필요 없습니다. <b>이 인물과 가장 관련 있는 큰 사건 1개</b>를 중심으로 정리하세요. 그 안에서 게임 캐릭터로 바꿀 수 있는 역사적 사실 4가지만 뽑습니다.</p>
+        <p>여러 사건을 억지로 찾을 필요 없습니다. <b>이 인물과 가장 관련 있는 큰 사건 1개</b>를 중심으로 충분히 설명하고, 그 사건 안에서 게임 캐릭터의 재료가 될 역사적 사실 4개를 뽑습니다.</p>
       </div>
 
       <div class="event-card card">
@@ -378,29 +446,33 @@
         <label>대표 사건 이름
           <input id="eventTitle" data-field="event-title" value="${escapeHtml(state.eventStudy.eventTitle)}" placeholder="예: 프랑스 혁명">
         </label>
-        <label>이 사건은 어떤 사건인가요? <span class="mini-guide">2~3문장</span>
-          <textarea id="eventSummary" data-field="event-summary" rows="3" placeholder="원인·전개·결과를 모두 길게 쓸 필요는 없습니다. 수업에서 배운 핵심이 드러나도록 2~3문장으로 설명하세요.">${escapeHtml(state.eventStudy.eventSummary)}</textarea>
+        <label>이 사건은 어떤 사건인가요? <span class="mini-guide">4~6문장 · 최소 100자</span>
+          <textarea id="eventSummary" data-field="event-summary" rows="7" placeholder="수업에서 배운 내용을 바탕으로 사건의 배경, 중요한 전개, 변화나 결과가 드러나도록 4~6문장 정도로 설명하세요. 인물의 일대기를 쓰는 칸이 아닙니다.">${escapeHtml(state.eventStudy.eventSummary)}</textarea>
+          <small class="writing-guide">현재 <b id="eventSummaryCount">${state.eventStudy.eventSummary.length}</b>자 · 최소 100자</small>
         </label>
-        <label>${escapeHtml(state.selectedPerson)}는 이 사건과 어떻게 연결되나요? <span class="mini-guide">1~2문장</span>
-          <textarea id="personConnection" data-field="person-connection" rows="2" placeholder="이 인물의 역할·행동·상징성 중 사건 이해에 필요한 것만 적으세요.">${escapeHtml(state.eventStudy.personConnection)}</textarea>
+        <label>${escapeHtml(state.selectedPerson)}는 이 사건과 어떻게 연결되나요? <span class="mini-guide">2~4문장 · 최소 50자</span>
+          <textarea id="personConnection" data-field="person-connection" rows="5" placeholder="이 인물이 사건에서 한 역할, 취한 행동, 또는 당시 사람들에게 어떤 상징으로 받아들여졌는지 사건 중심으로 설명하세요.">${escapeHtml(state.eventStudy.personConnection)}</textarea>
+          <small class="writing-guide">현재 <b id="personConnectionCount">${state.eventStudy.personConnection.length}</b>자 · 최소 50자</small>
         </label>
       </div>
 
       <div class="fact-zone">
-        <div class="fact-zone-head"><div><div class="card-number">HISTORY FACT x4</div><h3>게임의 재료가 될 역사적 사실 4개</h3></div><span>각각 1문장 정도면 충분합니다.</span></div>
+        <div class="fact-zone-head"><div><div class="card-number">HISTORY FACT x4</div><h3>게임의 재료가 될 역사적 사실 4개</h3></div><span>각각 1~2문장, 최소 20자</span></div>
         <div class="fact-grid">${factInputs()}</div>
         <label class="source-note">근거 메모 <span class="optional">선택</span>
           <input id="sourceNote" data-field="source-note" value="${escapeHtml(state.eventStudy.sourceNote)}" placeholder="예: 교과서 p.134 / 수업 활동지 2쪽">
         </label>
       </div>
 
-      <div class="tip-card"><b>💡 잘 쓴 답안은 ‘인물 정보’가 많아서 좋은 게 아닙니다.</b><span>대표 사건을 제대로 이해하고, 그 사건 속 역사적 사실을 캐릭터의 능력과 기술로 설득력 있게 바꾸면 됩니다.</span></div>
+      <div class="tip-card"><b>💡 ‘마리 앙투아네트’를 골랐다고 그 사람의 생애를 조사할 필요는 없습니다.</b><span>프랑스 혁명을 제대로 설명하고, 왕실·구체제·혁명 과정과 연결되는 사실을 게임 재료로 뽑으면 충분합니다.</span></div>
     </section>${navHtml()}`;
 
+    const count = (id, out) => { const el = $(id), target = $(out); const f = () => target.textContent = el.value.length; el.addEventListener("input", f); };
     $("#eventTitle").addEventListener("input", e => { state.eventStudy.eventTitle = e.target.value; queueSave(); });
     $("#eventSummary").addEventListener("input", e => { state.eventStudy.eventSummary = e.target.value; queueSave(); });
     $("#personConnection").addEventListener("input", e => { state.eventStudy.personConnection = e.target.value; queueSave(); });
     $("#sourceNote").addEventListener("input", e => { state.eventStudy.sourceNote = e.target.value; queueSave(); });
+    count("#eventSummary", "#eventSummaryCount"); count("#personConnection", "#personConnectionCount");
     appEl.querySelectorAll("[data-fact]").forEach(el => el.addEventListener("input", e => {
       state.eventStudy.facts[Number(e.target.dataset.fact)].text = e.target.value;
       queueSave();
@@ -411,7 +483,9 @@
       if (!e.eventTitle.trim() || !e.eventSummary.trim() || !e.personConnection.trim() || !e.facts.every(f => f.text.trim())) {
         return alert("대표 사건, 사건 설명, 인물과의 연결, 역사적 사실 4개를 모두 작성해주세요.");
       }
-      // 처음 진입하는 학생은 사실 1~4가 각각 하나씩 자동 연결되도록 보정
+      if (e.eventSummary.trim().length < 100) return alert("대표 사건 설명을 조금 더 자세히 써주세요. 최소 100자 이상 작성합니다.");
+      if (e.personConnection.trim().length < 50) return alert("인물과 사건의 연결을 조금 더 자세히 써주세요. 최소 50자 이상 작성합니다.");
+      if (e.facts.some(f => f.text.trim().length < 20)) return alert("역사적 사실 4개를 각각 20자 이상, 1~2문장 정도로 작성해주세요.");
       state.gameElements.slice(0, 4).forEach((g, i) => { if (!g.factId) g.factId = e.facts[i].id; });
       state.step = 4; queueSave(); renderApp(); window.scrollTo(0, 0);
     });
@@ -482,11 +556,11 @@
       <div class="lock-box lock-danger">
         <div class="lock-icon">!</div>
         <div>
-          <b>⚠️ 글 잠금 전 마지막 점검</b>
-          <p>아래 버튼을 누르면 <strong>학생 정보, 대표 사건, 역사적 사실, 기술·능력치가 모두 잠깁니다.</strong><br>잠근 뒤에는 학생이 직접 수정할 수 없고, 교사가 관리자 화면에서 잠금을 풀어야 합니다.</p>
+          <b>${IS_TEST_SESSION ? "🧪 TEST MODE · 잠금 없이 다음 단계로 이동" : "⚠️ 글 잠금 전 마지막 점검"}</b>
+          <p>${IS_TEST_SESSION ? "테스트 주소에서는 글을 잠그지 않습니다. 초상화 단계까지 갔다가 이전 단계로 자유롭게 돌아와 수정할 수 있습니다." : "아래 버튼을 누르면 <strong>학생 정보, 대표 사건, 역사적 사실, 기술·능력치가 모두 잠깁니다.</strong><br>잠근 뒤에는 학생이 직접 수정할 수 없고, 교사가 관리자 화면에서 잠금을 풀어야 합니다."}</p>
           <ul class="lock-checklist"><li>오탈자를 확인했나요?</li><li>FACT 1~4를 모두 한 번 이상 사용했나요?</li><li>게임 효과보다 ‘역사적 근거’가 설명되어 있나요?</li></ul>
-          <label class="confirm-check"><input id="lockAck" type="checkbox"> <span><b>확정 후에는 수정할 수 없다는 점을 확인했습니다.</b><br>지금 작성한 역사 글과 게임 빌드를 최종 확정하겠습니다.</span></label>
-          <button id="lockBtn" class="primary lock-button" disabled>🔒 글 잠그고 초상화 퀘스트로 →</button>
+          <label class="confirm-check"><input id="lockAck" type="checkbox"> <span><b>${IS_TEST_SESSION ? "테스트 모드로 다음 단계에 진행합니다." : "확정 후에는 수정할 수 없다는 점을 확인했습니다."}</b><br>${IS_TEST_SESSION ? "실제 학생 화면에서는 이 단계에서 글이 잠깁니다." : "지금 작성한 역사 글과 게임 빌드를 최종 확정하겠습니다."}</span></label>
+          <button id="lockBtn" class="primary lock-button" disabled>${IS_TEST_SESSION ? "🧪 TEST · 초상화 단계로 →" : "🔒 글 잠그고 초상화 퀘스트로 →"}</button>
         </div>
       </div>
     </section>${navHtml({ next: false })}`;
@@ -528,10 +602,15 @@
       if (state.gameElements.length < 4) return alert("게임 요소를 최소 4개 작성해주세요.");
       if (!state.gameElements.every(gameElementComplete)) return alert("모든 게임 요소의 근거 사실, 이름, 연결 이유를 채워주세요. '기술'은 효과 설명도 필요합니다.");
       if (!allFactsUsed()) return alert("FACT 1~4를 각각 최소 한 번은 사용해주세요.");
-      const ok = confirm("정말 글을 잠글까요?\n\n확정 후에는 학생 정보·역사 내용·게임 요소를 학생이 수정할 수 없습니다.\n수정이 필요하면 선생님이 관리자 화면에서 잠금을 풀어야 합니다.");
-      if (!ok) return;
-      state.textLocked = true;
-      state.textLockedAt = new Date().toISOString();
+      if (!IS_TEST_SESSION) {
+        const ok = confirm("정말 글을 잠글까요?\n\n확정 후에는 학생 정보·역사 내용·게임 요소를 학생이 수정할 수 없습니다.\n수정이 필요하면 선생님이 관리자 화면에서 잠금을 풀어야 합니다.");
+        if (!ok) return;
+        state.textLocked = true;
+        state.textLockedAt = new Date().toISOString();
+      } else {
+        state.textLocked = false;
+        state.isTest = true;
+      }
       state.step = 5;
       queueSave(); renderApp(); window.scrollTo(0, 0);
     });
@@ -605,23 +684,38 @@
 
   function renderImage() {
     const tools = IMAGE_TOOLS.map(t => `<a href="${escapeHtml(t.url)}" target="_blank" rel="noreferrer"><b>${escapeHtml(t.name)} ↗</b><span>새 탭에서 만든 뒤 완성 이미지만 다시 이 사이트에 첨부하세요.</span></a>`).join("");
+    const promptCards = PORTRAIT_PROMPTS.map((p, i) => `<button type="button" class="prompt-card" data-prompt-index="${i}"><span class="prompt-game">${escapeHtml(p.label)}</span><small>${escapeHtml(p.subtitle || "")}</small><b>이 프롬프트 선택·복사</b></button>`).join("");
     appEl.innerHTML = `<section class="panel image-step quest-panel">
       <div class="panel-icon">ART</div>
       <div class="eyebrow">STEP 5 · AI IMAGE ALLOWED</div>
       <h2>이제 캐릭터 초상화를 완성하세요.</h2>
-      <p class="lead">역사 글은 이미 잠겼습니다. 지금부터는 외부 AI 이미지 사이트를 사용해도 됩니다. 역사 인물의 공개 초상화를 참고 이미지로 넣고, 게임 캐릭터처럼 재해석해 보세요.</p>
+      <p class="lead">역사 글은 ${IS_TEST_SESSION ? "테스트 모드라 잠기지 않았습니다." : "이미 잠겼습니다."} 이제부터는 외부 AI 이미지 사이트를 사용할 수 있습니다. <b>인터넷에서 해당 역사 인물의 실제 초상화·사진을 저장해 AI에 업로드한 뒤</b>, 아래 게임 스타일 중 하나를 골라 변환해 보세요.</p>
 
+      <div class="image-workflow"><div><b>1</b><span>역사 인물 초상화 찾기</span></div><i>→</i><div><b>2</b><span>AI 사이트에 사진 업로드</span></div><i>→</i><div><b>3</b><span>게임 프롬프트 적용</span></div><i>→</i><div><b>4</b><span>완성 이미지 제출</span></div></div>
       <div class="tool-grid">${tools || `<div class="tool-note"><b>선생님이 안내한 이미지 도구를 사용하세요.</b><span>완성 이미지만 이곳에 첨부하면 됩니다.</span></div>`}</div>
 
-      <div class="prompt-box"><b>복사해서 쓸 수 있는 추천 프롬프트</b><code>업로드한 역사 인물의 얼굴 특징과 시대 복식의 핵심 요소를 유지하고, 현대 판타지 전략 게임의 오리지널 캐릭터 초상화로 재해석해줘. 상반신 구도, 극적인 조명, 정교한 게임 일러스트, 글자와 로고 없음.</code></div>
+      <div class="prompt-gallery"><div class="prompt-gallery-head"><div><div class="card-number">STYLE SELECT</div><h3>어떤 게임 캐릭터 느낌으로 만들까요?</h3></div><span>버튼을 누르면 프롬프트가 복사됩니다.</span></div><div class="prompt-card-grid">${promptCards}</div></div>
+      <div id="selectedPromptBox" class="prompt-box" hidden><b id="selectedPromptTitle">선택한 프롬프트</b><code id="selectedPromptText"></code><button id="copyPromptAgain" type="button" class="secondary small">다시 복사</button></div>
+
+      <div class="prompt-safety"><b>중요</b><span>프롬프트의 ‘업로드한 역사 인물 사진을 참고 이미지로 사용’이라는 문장을 지우지 마세요. 완전히 새로운 얼굴을 만드는 것이 아니라 <u>실제 역사 인물의 얼굴과 시대 특징을 유지한 게임 캐릭터화</u>가 목표입니다.</span></div>
 
       <label class="upload-box"><span id="uploadLabel">🖼 완성한 캐릭터 이미지 첨부</span><input id="imageInput" type="file" accept="image/*"></label>
       <p id="uploadNotice" class="notice"></p>
       ${localImageData ? `<img class="final-preview" src="${localImageData}" alt="최종 캐릭터">` : ""}
 
-      <div class="image-optional-note"><b>이미지를 못 만들었거나 첨부 오류가 나도 제출할 수 있습니다.</b><span>수업 시간의 네트워크·사이트 오류를 고려해 이미지 첨부는 필수가 아닙니다. 그림의 미적 완성도도 역사 점수에 반영하지 않습니다.</span></div>
-      <div class="tech-note"><b>왜 이미지가 빨리 올라가나요?</b><span>이 사이트가 이미지를 자동으로 작은 JPEG로 압축해 Firebase Firestore에 저장합니다.</span></div>
+      <div class="image-optional-note"><b>이미지를 못 만들었거나 첨부 오류가 나도 제출할 수 있습니다.</b><span>네트워크·외부 사이트 오류를 고려해 이미지 첨부는 필수가 아닙니다. 그림의 미적 완성도도 역사 점수에 반영하지 않습니다.</span></div>
     </section>${navHtml({ next: true, nextLabel: "최종 확인 →" })}`;
+
+    let selectedPrompt = "";
+    appEl.querySelectorAll("[data-prompt-index]").forEach(btn => btn.addEventListener("click", async () => {
+      const p = PORTRAIT_PROMPTS[Number(btn.dataset.promptIndex)]; if (!p) return;
+      selectedPrompt = p.prompt;
+      $("#selectedPromptTitle").textContent = `${p.label} 프롬프트`;
+      $("#selectedPromptText").textContent = p.prompt;
+      $("#selectedPromptBox").hidden = false;
+      try { await navigator.clipboard.writeText(p.prompt); showToast(`${p.label} 프롬프트를 복사했습니다.`); } catch { showToast("프롬프트를 아래 상자에서 길게 눌러 복사하세요."); }
+    }));
+    $("#copyPromptAgain")?.addEventListener("click", async () => { if (!selectedPrompt) return; try { await navigator.clipboard.writeText(selectedPrompt); showToast("프롬프트를 다시 복사했습니다."); } catch {} });
 
     $("#imageInput").addEventListener("change", async e => {
       const file = e.target.files?.[0];
@@ -654,24 +748,39 @@
 
   function renderReview() {
     const e = state.eventStudy;
-    appEl.innerHTML = `<section>
-      <div class="section-head game-heading">
-        <div><div class="eyebrow">STEP 6 · FINAL CHECK</div><h2>최종 제출 전<br><span>캐릭터 시트를 확인하세요.</span></h2></div>
-        <p>역사 글과 게임 요소는 이미 잠겨 있습니다. 초상화만 이전 버튼으로 돌아가 다시 첨부할 수 있습니다.</p>
-      </div>
-      <div class="character-sheet">
-        <div class="sheet-profile">
-          <div class="sheet-image">${localImageData ? `<img src="${localImageData}" alt="최종 캐릭터">` : `<div class="image-placeholder">NO IMAGE<br><small>이미지 미첨부</small></div>`}</div>
-          <div><span class="sheet-kicker">${escapeHtml(ACTIVITY.unitLabel)}</span><h3>${escapeHtml(state.selectedPerson)}</h3><p>${escapeHtml(state.className)}반 ${escapeHtml(state.studentNumber)}번 ${escapeHtml(state.studentName)}</p></div>
+    const checklist = [
+      ["HISTORY", "대표 사건과 역사적 사실 4개가 수업 내용과 맞는가?"],
+      ["BUILD", "게임 요소 4개 이상이 각각 역사적 사실과 연결되는가?"],
+      ["WHY", "‘왜 이렇게 표현했는지’가 자신의 말로 설명되어 있는가?"],
+      ["ART", localImageData ? "캐릭터 이미지가 정상적으로 첨부되었는가?" : "이미지 없이 제출할 사유를 확인했는가?"]
+    ];
+    appEl.innerHTML = `<section class="final-stage">
+      <div class="final-stage-glow"></div>
+      <div class="final-stage-head"><div><div class="eyebrow gold">STEP 6 · FINAL CHECK</div><h2>MISSION LOADOUT<br><span>제출 준비 완료?</span></h2><p>게임의 출전 준비 화면처럼 마지막으로 장비를 점검하세요. 이 화면의 확인이 끝나면 선생님에게 최종 제출됩니다.</p></div><div class="ready-rank"><span>READY</span><b>10</b><small>POINT RUBRIC</small></div></div>
+
+      <div class="final-stage-grid">
+        <div class="character-sheet final-character-card">
+          <div class="sheet-profile">
+            <div class="sheet-image">${localImageData ? `<img src="${localImageData}" alt="최종 캐릭터">` : `<div class="image-placeholder">NO IMAGE<br><small>이미지 미첨부</small></div>`}</div>
+            <div><span class="sheet-kicker">${escapeHtml(ACTIVITY.unitLabel)}</span><h3>${escapeHtml(state.selectedPerson)}</h3><p>${escapeHtml(state.className)}반 ${escapeHtml(state.studentNumber)}번 ${escapeHtml(state.studentName)}</p></div>
+          </div>
+          <div class="sheet-event"><small>MAIN EVENT</small><b>${escapeHtml(e.eventTitle)}</b><p>${escapeHtml(e.eventSummary)}</p></div>
+          <div class="sheet-build"><small>CHARACTER BUILD</small>${state.gameElements.map((g, i) => `<div><span>${i + 1}</span><b>[${g.kind === "skill" ? "기술" : "능력치"}] ${escapeHtml(g.name)}</b></div>`).join("")}</div>
         </div>
-        <div class="sheet-event"><small>MAIN EVENT</small><b>${escapeHtml(e.eventTitle)}</b><p>${escapeHtml(e.eventSummary)}</p></div>
-        <div class="sheet-build"><small>CHARACTER BUILD</small>${state.gameElements.map((g, i) => `<div><span>${i + 1}</span><b>[${g.kind === "skill" ? "기술" : "능력치"}] ${escapeHtml(g.name)}</b></div>`).join("")}</div>
+        <div class="mission-check-panel"><div class="card-number">PRE-FLIGHT CHECK</div><h3>최종 점검</h3>${checklist.map((c,i)=>`<div class="mission-check"><span>${i+1}</span><div><b>${c[0]}</b><p>${c[1]}</p></div><em>CHECK</em></div>`).join("")}
+          <div class="grading-notice"><b>🤖 AI 초벌 검토 안내</b><span>AI는 중학교 역사교사·역사교육 전문가의 기준을 바탕으로 선생님의 초벌 검토를 보조합니다. <strong>AI 점수가 그대로 성적이 되는 것은 아니며</strong>, 선생님이 직접 답안을 다시 확인한 뒤 최종 점수를 부여합니다.</span></div>
+          ${IS_TEST_SESSION ? `<div class="test-mode-card"><b>🧪 TEST MODE</b><span>테스트 제출은 실제 최종 제출 상태로 잠기지 않습니다. 제출 버튼을 눌러 흐름을 확인한 뒤 다시 이전 단계로 이동할 수 있습니다.</span></div>` : `<div class="submit-warning">제출 후에는 학생 화면에서 수정할 수 없습니다. 필요한 내용이 있다면 지금 선생님께 질문하세요.</div>`}
+          <button id="submitBtn" class="primary big final-submit">${IS_TEST_SESSION ? "🧪 테스트 제출 동작 확인" : "🏁 최종 제출하기"}</button>
+        </div>
       </div>
-      <div class="submit-warning">제출 후에는 학생 화면에서 수정할 수 없습니다. 선생님에게 제출되며, 이후 교사가 10점 루브릭으로 평가합니다.</div>
-      <button id="submitBtn" class="primary big">🏁 최종 제출하기</button>
     </section>${navHtml({ next: false })}`;
 
     $("#submitBtn").addEventListener("click", async () => {
+      if (IS_TEST_SESSION) {
+        state.testSubmittedAt = new Date().toISOString(); state.isTest = true; queueSave();
+        showToast("TEST: 제출 동작을 확인했습니다. 이전 버튼으로 다시 돌아갈 수 있습니다.");
+        return;
+      }
       if (!confirm("최종 제출할까요?\n제출 후에는 학생 화면에서 수정할 수 없습니다.")) return;
       state.submitted = true;
       state.submittedAt = new Date().toISOString();
@@ -693,7 +802,7 @@
   }
 
   function onVisibility() {
-    if (!state || state.step > 4 || state.textLocked || state.submitted) return;
+    if (!state || IS_TEST_SESSION || state.step < 2 || state.step > 4 || state.textLocked || state.submitted) return;
     if (document.hidden) {
       awayStarted = Date.now();
       saveLocalNow();
@@ -705,28 +814,39 @@
     }
   }
 
-  function onPaste(e) {
-    if (!state || state.step > 4 || state.textLocked || state.submitted) return;
+  function onClipboard(e) {
+    if (!state || IS_TEST_SESSION || state.step < 2 || state.step > 4 || state.textLocked || state.submitted) return;
+    if (!["INPUT", "TEXTAREA"].includes(e.target?.tagName)) return;
+    e.preventDefault();
     const field = e.target?.dataset?.field || e.target?.name || "unknown";
+    const action = e.type;
     const charCount = e.clipboardData?.getData("text")?.length || 0;
-    appendLog({ id: id("paste"), type: "paste", step: state.step, at: new Date().toISOString(), field, charCount });
+    appendLog({ id: id("clipboard"), type: "clipboard", action, step: state.step, at: new Date().toISOString(), field, charCount });
+    showToast(`${action === "paste" ? "붙여넣기" : action === "copy" ? "복사" : "잘라내기"}는 글쓰기 단계에서 사용할 수 없습니다.`);
+  }
+
+  function onContextMenu(e) {
+    if (!state || IS_TEST_SESSION || state.step < 2 || state.step > 4 || state.textLocked || state.submitted) return;
+    if (["INPUT", "TEXTAREA"].includes(e.target?.tagName)) { e.preventDefault(); showToast("글쓰기 입력칸에서는 복사·붙여넣기 메뉴를 사용할 수 없습니다."); }
   }
 
   function setupMonitoring() {
-    const should = state && state.step <= 4 && !state.textLocked && !state.submitted;
+    const should = state && !IS_TEST_SESSION && state.step >= 2 && state.step <= 4 && !state.textLocked && !state.submitted;
     if (should && !monitoringOn) {
       document.addEventListener("visibilitychange", onVisibility);
-      document.addEventListener("paste", onPaste);
+      ["paste", "copy", "cut"].forEach(t => document.addEventListener(t, onClipboard));
+      document.addEventListener("contextmenu", onContextMenu);
       monitoringOn = true;
     } else if (!should && monitoringOn) {
       document.removeEventListener("visibilitychange", onVisibility);
-      document.removeEventListener("paste", onPaste);
+      ["paste", "copy", "cut"].forEach(t => document.removeEventListener(t, onClipboard));
+      document.removeEventListener("contextmenu", onContextMenu);
       monitoringOn = false;
     }
   }
 
   function shouldWarnExit() {
-    return Boolean(state && !state.submitted && state.step >= 2);
+    return Boolean(!IS_TEST_SESSION && state && !state.submitted && state.step >= 2);
   }
 
   function setupExitGuard() {
@@ -772,7 +892,11 @@
     uid = ownerUid;
     submissionId = makeSubmissionId(uid);
     state = await loadState(uid);
-    if (remoteEnabled) setSaveText("✓ 저장됨");
+    state.isTest = IS_TEST_SESSION;
+    state.schoolGrade = String(ACTIVITY.schoolGrade || state.schoolGrade || "");
+    if (IS_TEST_SESSION && !state.studentName) { state.className = "0"; state.studentNumber = "0"; state.studentName = "교사테스트"; }
+    if (IS_TEST_SESSION) { setupBannerEl.hidden = false; setupBannerEl.innerHTML = `<b>🧪 TEST MODE</b> · 단계 왕복과 수정이 자유롭고, 관리자 기본 목록에서는 테스트 데이터가 제외됩니다.`; setSaveText("TEST · 자동 저장", "demo"); }
+    else if (remoteEnabled) setSaveText("✓ 저장됨");
     renderApp();
     setupExitGuard();
   }
