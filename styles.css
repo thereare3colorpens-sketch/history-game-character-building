@@ -277,3 +277,6 @@ html{scroll-behavior:smooth}
 @media (max-width:1050px){.case-three-step{grid-template-columns:1fr 1fr}.case-game-effect{grid-column:1/-1}}
 @media (max-width:760px){.game-glossary,.example-case-tabs,.example-final-guide{grid-template-columns:1fr}.case-three-step{grid-template-columns:1fr}.case-game-effect{grid-column:auto}.example-case-tabs button{text-align:center}}
 @media (prefers-reduced-motion:reduce){.example-case-stage,.example-case-tabs button{animation:none;transition:none}}
+
+/* v4.3.1 admin login diagnostics */
+.admin-login-error{margin-top:14px;padding:12px 14px;border-radius:12px;background:#fff1f2;color:#9f1239;font-size:.95rem;line-height:1.5;border:1px solid #fecdd3;word-break:break-word}

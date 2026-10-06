@@ -340,8 +340,30 @@
   }
 
   function renderLogin(msg = "") {
-    root.innerHTML = `<main class="admin-login"><div class="admin-login-card"><div class="eyebrow">TEACHER ONLY</div><h1>교사 관리자</h1><p>${msg || "config.js에 등록한 교사 Google 계정으로 로그인하세요."}</p><button id="login" class="primary">Google로 로그인</button></div></main>`;
-    root.querySelector("#login").onclick = () => auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    root.innerHTML = `<main class="admin-login"><div class="admin-login-card"><div class="eyebrow">TEACHER ONLY</div><h1>교사 관리자</h1><p>${msg || "config.js에 등록한 교사 Google 계정으로 로그인하세요."}</p><button id="login" class="primary">Google로 로그인</button><p id="loginError" class="admin-login-error" style="display:none"></p></div></main>`;
+    const btn = root.querySelector("#login");
+    const err = root.querySelector("#loginError");
+    btn.onclick = async () => {
+      btn.disabled = true;
+      btn.textContent = "Google 로그인 중…";
+      if (err) err.style.display = "none";
+      try {
+        // 학생용 익명 로그인과 교사용 Google 로그인이 같은 브라우저에서 충돌하지 않도록
+        // 관리자 전용 Firebase App/Auth 인스턴스를 사용합니다.
+        await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: "select_account" });
+        await auth.signInWithPopup(provider);
+      } catch (e) {
+        console.error("Teacher login failed", e);
+        if (err) {
+          err.style.display = "block";
+          err.textContent = `로그인 오류: ${e?.code || e?.message || "알 수 없는 오류"}`;
+        }
+        btn.disabled = false;
+        btn.textContent = "Google로 로그인";
+      }
+    };
   }
 
   function renderSetup() {
@@ -351,18 +373,31 @@
   async function bootstrap() {
     if (!configured() || !window.firebase) return renderSetup();
     try {
-      if (!firebase.apps.length) firebase.initializeApp(FC);
-      auth = firebase.auth();
-      db = firebase.firestore();
+      // 중요: 학생 페이지는 기본 Firebase App에서 익명 로그인을 사용합니다.
+      // 관리자 페이지는 별도의 named App을 사용해 같은 기기/브라우저에서도
+      // 학생 익명 세션과 교사 Google 세션이 서로 덮어쓰지 않게 분리합니다.
+      const ADMIN_APP_NAME = "historyTeacherAdmin";
+      let adminApp = firebase.apps.find(a => a.name === ADMIN_APP_NAME);
+      if (!adminApp) adminApp = firebase.initializeApp(FC, ADMIN_APP_NAME);
+      auth = adminApp.auth();
+      db = adminApp.firestore();
+
       auth.onAuthStateChanged(async u => {
         if (!u) return renderLogin();
+        if (!u.email) {
+          await auth.signOut().catch(() => {});
+          return renderLogin("교사용 Google 로그인이 필요합니다. 아래 버튼을 눌러 관리자 계정을 선택하세요.");
+        }
         if (String(u.email || "").toLowerCase() !== String(ADMIN_EMAIL).toLowerCase()) {
-          return renderLogin(`현재 로그인: ${esc(u.email)} · config.js와 Firestore 규칙의 관리자 이메일을 확인하세요.`);
+          const wrong = u.email;
+          await auth.signOut().catch(() => {});
+          return renderLogin(`현재 계정 ${esc(wrong)}은(는) 관리자 계정이 아닙니다. config.js에 등록한 관리자 Google 계정으로 로그인하세요.`);
         }
         await refresh();
       });
     } catch (e) {
-      console.error(e); renderSetup();
+      console.error(e);
+      renderLogin(`관리자 초기화 오류: ${esc(e?.code || e?.message || "알 수 없는 오류")}`);
     }
   }
 
