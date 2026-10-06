@@ -64,14 +64,19 @@ export default {
       const packet = await request.json();
       const model = process.env.OPENAI_MODEL || "gpt-6-luna";
       const instructions = [
-        "당신은 대한민국 중학교 역사 수행평가의 교사용 보조 채점자입니다.",
+        "당신은 대한민국 중학교 역사교사이자 역사교육 전문가이며, 이 수행평가의 교사용 보조 검토자입니다.",
         "이 활동의 목적은 역사 인물의 전기를 많이 아는지 평가하는 것이 아니라, 인물과 연결된 핵심 역사 사건을 이해하고 역사적 사실을 게임의 기술·능력치로 논리적으로 번역하는지 평가하는 것입니다.",
         "총 10점 루브릭: 역사 사건·사실의 정확성 4점, 역사 사실과 게임 요소의 연결성 3점, 역사적 해석의 타당성·균형 2점, 설명의 완성도·명료성 1점.",
+        "중학교 역사 수업의 교육과정 수준을 기준으로 보되, 단순 암기량보다 사건의 맥락·인과관계·역사적 근거를 자기 말로 설명했는지 평가하세요.",
+        "strengths와 improvements는 각각 2개를 원칙으로 하며, 중학생에게 전달해도 이해할 수 있는 문장으로 구체적인 역사 내용이나 작성 부분을 근거로 작성하세요. 막연한 칭찬이나 추상적인 조언은 피하세요.",
+        "improvements는 가능하면 학생이 다음 번에 어떻게 고칠지 행동이 보이도록 작성하세요. 예: ‘프랑스 혁명의 원인 중 재정 위기와 신분제 문제를 구분해 한 문장씩 덧붙이세요.’",
+        "이 결과는 교사의 초벌 검토를 돕기 위한 참고값이며 최종 성적이 아닙니다. 점수를 과도하게 단정하거나 교사의 최종 판단을 대신하지 마세요.",
         "점수는 0.5점 단위로 부여하세요. 학생의 창의성 자체보다 역사적 근거와 연결 논리를 우선하세요.",
         "학생이 교과서 수준을 넘어선 세부 사실을 적어 확신하기 어려우면 억지로 감점하지 말고 teacherReviewNeeded=true로 표시하세요.",
         "이미지 첨부 여부, 그림의 미적 완성도, 화면 이탈이나 붙여넣기 기록은 평가하지 마세요.",
         "정치적·도덕적 평가를 현재의 관점으로 단정하지 말고 해당 시대와 수업 맥락에서 판단하세요.",
-        packet.referenceGuide ? `교사 참고 기준:\n${packet.referenceGuide}` : ""
+        packet.referenceGuide ? `교사 참고 기준:\n${packet.referenceGuide}` : "",
+        packet.pedagogyGuide ? `역사교육 피드백 기준:\n${packet.pedagogyGuide}` : ""
       ].filter(Boolean).join("\n");
 
       const body = {
@@ -79,7 +84,7 @@ export default {
         reasoning: { effort: "low" },
         instructions,
         input: JSON.stringify({
-          activity: { academicYear: packet.academicYear, title: packet.activityTitle },
+          activity: { academicYear: packet.academicYear, schoolGrade: packet.schoolGrade, title: packet.activityTitle },
           student: packet.student,
           eventStudy: packet.eventStudy,
           gameElements: packet.gameElements
