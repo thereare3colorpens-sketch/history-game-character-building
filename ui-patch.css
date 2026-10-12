@@ -1,0 +1,93 @@
+/* v4.5 — AI 검토 상태를 학생/교사에게 명확하게 보여주는 소규모 UI 패치 */
+.grading-notice {
+  display: grid !important;
+  grid-template-columns: 48px 1fr;
+  align-items: start;
+  gap: 14px;
+  padding: 18px 20px !important;
+  border: 1px solid rgba(133, 112, 255, .42) !important;
+  background: linear-gradient(135deg, rgba(89, 65, 190, .28), rgba(38, 80, 151, .16)) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+}
+.grading-notice-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 15px;
+  font-size: 25px;
+  background: linear-gradient(145deg, rgba(117, 80, 255, .65), rgba(39, 169, 255, .45));
+  box-shadow: 0 10px 26px rgba(75, 64, 180, .24);
+}
+.grading-notice-copy { display: grid; gap: 7px; min-width: 0; }
+.grading-notice-copy b { font-size: 1.05rem; }
+.grading-notice-copy span { line-height: 1.72; }
+
+.ai-wait-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(238, 179, 64, .38);
+  color: #8a5b00;
+  background: linear-gradient(135deg, #fff9e9, #fff0c5);
+  font-size: .78rem;
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+.ai-wait-chip i,
+.stat-wait-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  display: inline-block;
+  border-radius: 50%;
+  background: #f0ad2f;
+  box-shadow: 0 0 0 0 rgba(240, 173, 47, .45);
+  animation: aiWaitPulse 1.8s ease-out infinite;
+}
+@keyframes aiWaitPulse {
+  0% { box-shadow: 0 0 0 0 rgba(240, 173, 47, .45); }
+  70% { box-shadow: 0 0 0 7px rgba(240, 173, 47, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(240, 173, 47, 0); }
+}
+.admin-stat-card.gold small:has(.stat-wait-dot) {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.ai-pending-panel {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 12px;
+  align-items: start;
+  margin: 10px 0 12px;
+  padding: 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(234, 170, 45, .34);
+  background: linear-gradient(135deg, rgba(255, 246, 218, .96), rgba(255, 251, 239, .98));
+  color: #543900;
+}
+.ai-pending-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: linear-gradient(145deg, #ffdb74, #f4b936);
+  font-size: 22px;
+  box-shadow: 0 8px 20px rgba(198, 135, 22, .2);
+}
+.ai-pending-panel div:last-child { display: grid; gap: 5px; }
+.ai-pending-panel b { font-size: .98rem; }
+.ai-pending-panel span { font-size: .84rem; line-height: 1.55; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-wait-chip i, .stat-wait-dot { animation: none; }
+}
+@media (max-width: 760px) {
+  .grading-notice { grid-template-columns: 40px 1fr; padding: 15px !important; }
+  .grading-notice-icon { width: 40px; height: 40px; border-radius: 12px; font-size: 21px; }
+}
